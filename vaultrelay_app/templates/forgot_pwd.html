@@ -1,0 +1,159 @@
+
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>VaultRelay - Reset Password</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <style>
+        /* Same theme as before */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap');
+
+        :root {
+            --vault-dark: #0a192f;
+            --vault-blue: #00b4d8;
+            --vault-accent: #48cae4;
+            --vault-light: #caf0f8;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--vault-dark);
+            color: white;
+            background-image: url('{% static "images/digital-grid.png" %}'),
+            linear-gradient(135deg, rgba(10, 25, 47, 0.9), rgba(0, 0, 20, 0.95));
+            background-blend-mode: overlay;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .vault-form {
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid var(--vault-blue);
+            box-shadow: 0 0 20px rgba(0, 180, 216, 0.3);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .vault-header {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--vault-light);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 8px rgba(74, 202, 228, 0.7);
+        }
+
+        .form-control {
+            background: rgba(20, 40, 70, 0.7);
+            border: 1px solid rgba(74, 202, 228, 0.3);
+            color: white;
+            border-radius: 6px;
+            padding: 0.7rem 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: var(--vault-blue);
+            box-shadow: 0 0 0 0.25rem rgba(0, 180, 216, 0.25);
+        }
+
+        .btn-reset {
+            background: linear-gradient(135deg, var(--vault-blue), #0096c7);
+            border: none;
+            color: white;
+            width: 100%;
+            padding: 0.7rem;
+            font-family: 'Orbitron', sans-serif;
+            border-radius: 6px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            margin-top: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-reset:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 15px rgba(0, 180, 216, 0.5);
+        }
+
+        .password-rules {
+            font-size: 0.8rem;
+            color: var(--vault-accent);
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="vault-form">
+        <h3 class="vault-header">RESET YOUR PASSWORD</h3>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+        {% if error %}
+            <div class="alert alert-danger" role="alert">
+                {{ error }}
+            </div>
+        {% endif %}
+        <form method="POST">
+            {% csrf_token %}
+
+            <div class="mb-3">
+            <label for="email" class="form-label">Enter Email</label>
+            <input type="email" class="form-control" id="email" name="email" placeholder="your@email.com" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="new_password" class="form-label">New Password</label>
+                <input type="password" class="form-control" id="new_password" name="new_password" placeholder="Aa1@xyz"
+                    required>
+                <div class="password-rules">Use uppercase, numbers & symbols (@#!)</div>
+            </div>
+
+            <div class="mb-3">
+                <label for="confirm_password" class="form-label">Confirm Password</label>
+                <input type="password" class="form-control" id="confirm_password" name="confirm_password"
+                    placeholder="Re-enter password" required>
+            </div>
+
+            <button type="submit" class="btn-reset">UPDATE PASSWORD</button>
+        </form>
+    </div>
+    <script>
+        {% if redirect_to_index %}
+        setTimeout(function() {
+            window.location.href = "{% url 'home' %}";
+        }, 3000);
+        {% endif %}
+
+        document.querySelector("form").addEventListener("submit", function(event) {
+            const password = document.querySelector("input[name='new_password']").value;
+            const confirm = document.querySelector("input[name='confirm_password']").value;
+            const regex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+=\[\]{}|\\:;"',.<>?/`~-])[A-Za-z\d!@#$%^&*()_+=\[\]{}|\\:;"',.<>?/`~-]{6}$/;
+            if (!regex.test(password)) {
+                alert("Password must be 6 characters and include 1 uppercase, 1 digit, and 1 special character.");
+                event.preventDefault();
+                return;
+            }
+            if (password !== confirm) {
+                alert("Passwords do not match.");
+                event.preventDefault();
+            }
+        });
+    </script>
+</body>
+
+</html>

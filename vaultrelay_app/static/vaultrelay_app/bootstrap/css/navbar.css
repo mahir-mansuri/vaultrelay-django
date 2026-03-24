@@ -1,0 +1,153 @@
+/* Navigation Bar */
+.navbar {
+    position:fixed;
+    left:0; 
+    right:0; 
+    top:0;
+    height:var(--nav-height);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    z-index:120;
+    backdrop-filter: blur(8px);
+    background: linear-gradient(90deg, rgba(10,10,15,0.55), rgba(10,10,15,0.4));
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+.nav-container {
+    width:100%; 
+    max-width:1400px; 
+    display:flex; 
+    align-items:center; 
+    justify-content:space-between; 
+    padding:8px 24px;
+}
+
+.logo { 
+    display:flex; 
+    align-items:center; 
+    gap:12px; 
+    color: #fff; 
+    text-decoration:none; 
+    font-weight:800; 
+    font-size:20px;
+}
+
+.logo-icon {
+    width:44px;
+    height:44px;
+    border-radius:10px;
+    background: linear-gradient(135deg, var(--neon1), var(--neon2));
+    display:flex; 
+    align-items:center;
+    justify-content:center; 
+    box-shadow: 0 6px 30px rgba(122,0,255,0.12), 0 2px 8px rgba(0,240,255,0.06);
+}
+
+.logo-icon i { 
+    color:white; 
+    font-size:18px;
+}
+
+.nav-links { 
+    display:flex; 
+    gap:24px; 
+    align-items:center; 
+    list-style:none;
+}
+
+.nav-links a { 
+    color:var(--muted); 
+    text-decoration:none; 
+    font-weight:600; 
+    font-size:14px; 
+    position:relative; 
+    padding:8px; 
+    transition: all 180ms ease;
+}
+
+.nav-links a:hover { 
+    color:var(--neon3); 
+    text-shadow: 0 0 10px var(--neon3); 
+    transform: translateY(-2px);
+}
+
+.auth-buttons { 
+    display:flex; 
+    align-items:center; 
+    gap:12px;
+}
+
+/* Profile dropdown */
+.profile-dropdown { 
+    position:relative; 
+    display:inline-block;
+}
+
+.profile-button { 
+    display:flex; 
+    align-items:center; 
+    gap:8px; 
+    padding:6px; 
+    border-radius:999px; 
+    cursor:pointer; 
+    border:1px solid rgba(255,255,255,0.04); 
+    background:rgba(255,255,255,0.02);
+}
+
+.profile-button img { 
+    width:36px; 
+    height:36px; 
+    border-radius:50%; 
+    display:block; 
+    object-fit:cover;
+}
+
+.profile-menu {
+    position:absolute;
+    right:0;
+    top:calc(100% + 10px);
+    background: linear-gradient(180deg, rgba(10,10,15,0.95), rgba(8,8,12,0.95));
+    min-width:180px;
+    border-radius:12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    border:1px solid rgba(255,255,255,0.04);
+    overflow:hidden;
+    transform-origin: top right;
+    transform: translateY(-6px) scale(.98);
+    opacity:0;
+    pointer-events:none;
+    transition: all 180ms ease;
+    z-index:400;
+}
+
+.profile-menu.open { 
+    transform: translateY(0) scale(1); 
+    opacity:1; 
+    pointer-events:auto;
+}
+
+.profile-menu a { 
+    display:block; 
+    padding:12px 14px; 
+    color: #eaf6ff; 
+    text-decoration:none; 
+    font-weight:600;
+}
+
+.profile-menu a:hover { 
+    background: linear-gradient(90deg,var(--neon2),var(--neon3)); 
+    color:#021018;
+}
+
+/* Responsive styles */
+@media (max-width:1024px) {
+    .nav-links { 
+        display:none;
+    }
+}
+
+/* Har page me navbar ke neeche space dene ke liye */
+body {
+    padding-top: calc(var(--nav-height) + 20px); /* 20px extra gap ke liye */
+}

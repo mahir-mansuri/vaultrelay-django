@@ -1,0 +1,70 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VaultRelay - Secure Login</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Rajdhani:wght@500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Futuristic Animated Background -->
+    <div class="cyber-bg">
+        <div class="cyber-grid"></div>
+        <div class="cyber-scanline"></div>
+        <div class="cyber-particles"></div>
+    </div>
+    
+    <!-- Holographic Login Container -->
+    <div class="hologram-container">
+        <div class="hologram-glare"></div>
+        
+        <div class="login-container">
+            <h2 class="login-header">
+                <span class="cyber-glitch">SECURE VAULT ACCESS</span>
+            </h2>
+            
+            <form method="POST" class="login-form" autocomplete="off">
+                {% csrf_token %}
+                {% if messages %}
+                    {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                    <div class="alert alert-success text-center mt-2" role="alert">{{ message }}</div>
+                    {% elif message.tags == 'error' %}
+                    <div class="alert alert-danger text-center mt-2" role="alert">{{ message }}</div>
+                    {% elif message.tags == 'warning' %}
+                    <div class="alert alert-warning text-center mt-2" role="alert">{{ message }}</div>
+                    {% else %}
+                    <div class="alert alert-info text-center mt-2" role="alert">{{ message }}</div>
+                    {% endif %}
+                    {% endfor %}
+                {% endif %}
+                
+                <div class="cyber-input">
+                    <input type="email" name="email" class="form-control" placeholder="Your Email" required autocomplete="off">
+                    <span class="cyber-underline"></span>
+                </div>
+                
+                <div class="cyber-input">
+                    <input type="password" name="pwd" class="form-control" placeholder="Encryption Password" required autocomplete="new-password">
+                    <span class="cyber-underline"></span>
+                </div>
+                
+                <button type="submit" class="cyber-button">
+                    <span class="cyber-btn-text">UNLOCK VAULT</span>
+                    <span class="cyber-btn-explosion"></span>
+                </button>
+                <div class="login-footer">
+                    <br>
+                    <a href="{% url 'forgot_pwd' %}" class="cyber-link">Forgot Password?</a> • 
+                    <a href="{% url 'need_help' %}" class="cyber-link">Need Help?</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Temporarily removed login.js to prevent any interference -->
+    <script src="{% static 'js/login.js' %}"> -->
+</body>
+</html>

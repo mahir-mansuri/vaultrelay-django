@@ -1,0 +1,341 @@
+/* Profile Update Page Styles */
+:root {
+    --primary: #7a00ff;
+    --primary-dark: #6a00e0;
+    --secondary: #ff007f;
+    --accent: #00f0ff;
+    --accent-green: #00ff9e;
+    --dark-bg: #041018;
+    --dark-card: #0a1a2a;
+    --text-primary: #ffffff;
+    --text-secondary: #a0aec0;
+    --border-color: #2d3748;
+    --success: #2ed573;
+    --error: #e53e3e;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--dark-bg);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+    position: relative;
+    min-height: 100vh;
+}
+
+/* Particle canvas */
+#particles-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+}
+
+.gradient-veil {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: radial-gradient(circle at 10% 20%, rgba(122, 0, 255, 0.1) 0%, rgba(0, 240, 255, 0.05) 40%, transparent 70%),
+                radial-gradient(circle at 90% 80%, rgba(255, 0, 127, 0.1) 0%, rgba(0, 255, 158, 0.05) 40%, transparent 70%);
+    z-index: -1;
+}
+
+.profile-main {
+    padding: 2rem 1rem 4rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.profile-container {
+    background: rgba(10, 26, 42, 0.8);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-top: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--secondary), var(--primary), var(--accent));
+    border-radius: 4px 4px 0 0;
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+.profile-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: 50%;
+    font-size: 2rem;
+    box-shadow: 0 8px 24px rgba(122, 0, 255, 0.3);
+}
+
+.profile-header h1 {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(90deg, var(--text-primary), var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.profile-header p {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+}
+
+.profile-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.form-section {
+    padding: 1.5rem;
+    background: rgba(15, 30, 45, 0.5);
+    border-radius: 12px;
+    border: 1px solid var(--border-color);
+}
+
+.section-title {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    margin-bottom: 1.5rem;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.security-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+.security-title i {
+    color: var(--accent);
+    font-size: 1.4rem;
+}
+
+.security-title h2 {
+    font-family: 'Orbitron', sans-serif;
+    font-size: 1.4rem;
+    color: var(--accent);
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.form-row:last-child {
+    margin-bottom: 0;
+}
+
+.form-group {
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    background: rgba(20, 30, 48, 0.6);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(122, 0, 255, 0.2);
+}
+
+.form-control::placeholder {
+    color: var(--text-secondary);
+}
+
+.password-toggle {
+    position: relative;
+}
+
+.password-toggle i {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.password-toggle i:hover {
+    color: var(--accent);
+}
+
+.form-hint {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin-top: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.btn-cancel, .btn-update {
+    padding: 0.875rem 1.75rem;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-cancel {
+    background: rgba(255, 255, 255, 0.1);
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+}
+
+.btn-cancel:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.btn-update {
+    background: linear-gradient(90deg, var(--primary), var(--primary-dark));
+    color: white;
+    box-shadow: 0 4px 12px rgba(122, 0, 255, 0.3);
+}
+
+.btn-update:hover {
+    background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+    box-shadow: 0 6px 16px rgba(122, 0, 255, 0.4);
+    transform: translateY(-2px);
+}
+
+.toast-success {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: linear-gradient(90deg, var(--success), #20b2aa);
+    color: var(--dark-bg);
+    padding: 12px 18px;
+    border-radius: 8px;
+    box-shadow: 0 12px 40px rgba(46, 213, 115, 0.12);
+    transform: translateX(150%);
+    transition: transform 0.45s cubic-bezier(0.2, 0.9, 0.2, 1);
+    z-index: 1200;
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+}
+
+.toast-success i {
+    margin-right: 8px;
+}
+
+/* Animation for form elements */
+.reveal {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .profile-container {
+        padding: 1.5rem;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .btn-cancel, .btn-update {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .profile-header h1 {
+        font-size: 1.8rem;
+    }
+    
+    .profile-header p {
+        font-size: 1rem;
+    }
+    
+    .profile-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 1.5rem;
+    }
+    
+    .form-section {
+        padding: 1rem;
+    }
+}

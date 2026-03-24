@@ -1,0 +1,164 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact Us - VaultRelay</title>
+
+    <!-- Font Awesome + Orbitron -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/contact.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+</head>
+
+<body>
+    <!-- NAV -->
+    {% include 'navbar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+<section class="contact-section">
+  <div class="contact-info fade-in">
+    <h2>Get in Touch</h2>
+    <div class="info-box"><i class="fas fa-map-marker-alt"></i><span>123 Secure Street, CyberCity, India</span></div>
+    <div class="info-box"><i class="fas fa-envelope"></i><span>support@vaultrelay.com</span></div>
+  </div>
+
+  <div class="contact-form fade-in">
+    <h2>Send Us a Message</h2>
+
+    {% if messages %}
+    <div class="message-container">
+      {% for message in messages %}
+      <div class="alert alert-{{ message.tags|default:'info' }}">
+        {{ message }}
+        <span class="close-message">&times;</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    {% if show_popup %}
+    <div class="popup success-popup">
+      <p>✅ Your message has been sent successfully!</p>
+      <span class="close-popup">&times;</span>
+    </div>
+    {% endif %}
+
+    {% if show_registration_popup %}
+    <div class="popup registration-popup">
+      <div class="popup-header">
+        <h3>⚠️ Email Not Registered</h3>
+        <span class="close-popup">&times;</span>
+      </div>
+      <div class="popup-content">
+        <p>The email <strong style="color: #d68910; background: rgba(255,193,7,0.2); padding: 2px 6px; border-radius: 4px;">{{ unregistered_email }}</strong> is not registered with VaultRelay.</p>
+        <p>To submit a contact message, you need to either:</p>
+        <div class="popup-options">
+          <a href="{% url 'index' %}" class="btn-register">
+            <i class="fas fa-user-plus" style="margin-right: 8px;"></i>Register New Account
+          </a>
+          <button class="btn-change-email" onclick="changeEmail()">
+            <i class="fas fa-edit" style="margin-right: 8px;"></i>Change Email
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'contact' %}">
+      {% csrf_token %}
+
+      <div class="input-group">
+        <label for="id_name">Name</label>
+        <input type="text" name="name" id="id_name" placeholder="Enter your name" class="form-control" value="{{ form.name.value|default_if_none:'' }}">
+        {% if form.errors.name %}
+          <div class="error">{{ form.errors.name.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="input-group">
+        <label for="id_email">Email</label>
+        <input type="email" name="email" id="id_email" placeholder="Enter your email" class="form-control" value="{{ form.email.value|default_if_none:'' }}">
+        {% if form.errors.email %}
+          <div class="error">{{ form.errors.email.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="input-group">
+        <label for="id_subject">Subject</label>
+        <input type="text" name="subject" id="id_subject" placeholder="Subject of your message" class="form-control" value="{{ form.subject.value|default_if_none:'' }}">
+        {% if form.errors.subject %}
+          <div class="error">{{ form.errors.subject.0 }}</div>
+        {% endif %}
+      </div>
+
+      <div class="input-group">
+        <label for="id_message">Message</label>
+        <textarea name="message" id="id_message" placeholder="Type your message here" class="form-control" rows="5">{{ form.message.value|default_if_none:'' }}</textarea>
+        {% if form.errors.message %}
+          <div class="error">{{ form.errors.message.0 }}</div>
+        {% endif %}
+      </div>
+
+      <button type="submit" class="submit-btn">Send Message</button>
+    </form>
+  </div>
+</section>
+
+    </main>
+
+    <!-- FOOTER -->
+    {% include 'footer.html' %}
+
+<script>
+  const faders = document.querySelectorAll('.fade-in');
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+  faders.forEach(fader => observer.observe(fader));
+
+  document.querySelectorAll('.close-message').forEach(button => {
+    button.addEventListener('click', function () {
+      this.parentElement.style.display = 'none';
+    });
+  });
+
+  document.querySelectorAll('.close-popup').forEach(button => {
+    button.addEventListener('click', function () {
+      this.parentElement.style.display = 'none';
+    });
+  });
+
+  // Function to handle change email button
+  function changeEmail() {
+    // Hide the registration popup
+    const popup = document.querySelector('.registration-popup');
+    if (popup) {
+      popup.style.display = 'none';
+    }
+    
+    // Focus on the email field for easy editing
+    const emailField = document.getElementById('id_email');
+    if (emailField) {
+      emailField.focus();
+      emailField.select();
+    }
+  }
+</script>
+
+</body>
+</html>

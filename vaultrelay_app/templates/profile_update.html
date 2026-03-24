@@ -1,0 +1,286 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Update Profile | VaultRelay</title>
+
+    <!-- Font Awesome + Orbitron -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'static/vaultrelay_app/bootstrap/css/profile_update.css' %}">
+
+</head>
+
+<body>
+    <!-- Particle canvas & gradient -->
+    <canvas id="particles-canvas"></canvas>
+    <div class="gradient-veil"></div>
+
+    <!-- NAV -->
+    {% include 'navbar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="container profile-main">
+        <div class="profile-container reveal" data-reveal>
+            <div class="profile-header">
+                <div class="profile-icon">
+                    <i class="fas fa-user-edit"></i>
+                </div>
+                <h1>Update Your Profile</h1>
+                <p>Manage your personal information and security settings</p>
+            </div>
+
+            <form id="profileForm" class="profile-form">
+                <div class="form-section">
+                    <h2 class="section-title">Personal Information</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" id="firstName" class="form-control" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="middleName" class="form-label">Middle Name (Optional)</label>
+                            <input type="text" id="middleName" class="form-control" value="">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" id="lastName" class="form-control" value="" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="birthDate" class="form-label">Date of Birth</label>
+                            <input type="date" id="birthDate" class="form-control" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="form-label">Your Email</label>
+                            <input type="email" id="email" class="form-control" value="" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section security-section">
+                    <div class="security-title">
+                        <i class="fas fa-user-shield"></i>
+                        <h2>Trusted Contact</h2>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="trustedName" class="form-label">Trusted Person Name</label>
+                            <input type="text" id="trustedName" class="form-control" value="" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="trustedEmail" class="form-label">Trusted Person Email</label>
+                            <input type="email" id="trustedEmail" class="form-control" value="" required>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section security-section">
+                    <div class="security-title">
+                        <i class="fas fa-key"></i>
+                        <h2>Security Settings</h2>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group password-toggle">
+                            <label for="password" class="form-label">Current Password</label>
+                            <input type="password" id="password" class="form-control" value="" required>
+                            <i class="fas fa-eye" id="togglePassword"></i>
+                        </div>
+                        <div class="form-group password-toggle">
+                            <label for="newPassword" class="form-label">New Password (Optional)</label>
+                            <input type="password" id="newPassword" class="form-control">
+                            <i class="fas fa-eye" id="toggleNewPassword"></i>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="recoveryPhraseInput" class="form-label">Enter Secret Recovery Phrase</label>
+                        <textarea id="recoveryPhraseInput" class="form-control" rows="3"
+                            placeholder="Enter your recovery phrase separated by spaces"></textarea>
+                        <p class="form-hint">Enter the exact recovery phrase you saved during setup</p>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-cancel">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button type="submit" class="btn-update">
+                        <i class="fas fa-save"></i> Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    {% include 'footer.html' %}
+
+    <!-- Success Toast -->
+    <div id="successToast" class="toast-success">
+        <i class="fas fa-check-circle"></i>
+        <span>Profile updated successfully!</span>
+    </div>
+
+    <script src="{% static 'js/profile_update.js' %}"></script>
+</body>
+
+<script>
+    // Password toggle functionality
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+    const toggleNewPassword = document.getElementById('toggleNewPassword');
+    const newPassword = document.getElementById('newPassword');
+
+    if (togglePassword && password) {
+        togglePassword.addEventListener('click', function () {
+            const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+            password.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+
+    if (toggleNewPassword && newPassword) {
+        toggleNewPassword.addEventListener('click', function () {
+            const type = newPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            newPassword.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+
+    // Form submission
+    document.getElementById('profileForm').addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        // Show success message
+        const successToast = document.getElementById('successToast');
+        successToast.style.display = 'flex';
+        successToast.style.transform = 'translateX(0)';
+
+        // Hide after 3 seconds
+        setTimeout(() => {
+            successToast.style.transform = 'translateX(150%)';
+        }, 3000);
+    });
+
+    // Cancel button functionality
+    document.querySelector('.btn-cancel').addEventListener('click', function () {
+        window.history.back();
+    });
+
+    /* =====================================================
+       PARTICLES (canvas) - neon multi-color floating dots
+       ===================================================== */
+    (function () {
+        const canvas = document.getElementById('particles-canvas');
+        if (!canvas) return;
+
+        const ctx = canvas.getContext('2d');
+        let W = canvas.width = innerWidth;
+        let H = canvas.height = innerHeight;
+        window.addEventListener('resize', () => { W = canvas.width = innerWidth; H = canvas.height = innerHeight; init(); });
+
+        const colors = ['#ff007f', '#7a00ff', '#00f0ff', '#00ff9e'];
+        let particles = [];
+
+        function rnd(min, max) { return Math.random() * (max - min) + min }
+
+        function createParticle() {
+            return {
+                x: rnd(0, W),
+                y: rnd(0, H),
+                vx: rnd(-0.25, 0.25),
+                vy: rnd(-0.25, 0.25),
+                r: rnd(0.6, 2.6),
+                c: colors[Math.floor(Math.random() * colors.length)],
+                alpha: rnd(0.06, 0.28)
+            };
+        }
+
+        function init() {
+            particles = [];
+            const count = Math.max(Math.min(Math.floor((W * H) / 60000), 160), 60);
+            for (let i = 0; i < count; i++) particles.push(createParticle());
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, W, H);
+            // soft glow background
+            for (let p of particles) {
+                ctx.beginPath();
+                const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8);
+                grad.addColorStop(0, hexToRgba(p.c, p.alpha * 1.2));
+                grad.addColorStop(0.15, hexToRgba(p.c, p.alpha * 0.7));
+                grad.addColorStop(1, hexToRgba('#000000', 0));
+                ctx.fillStyle = grad;
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+
+                // move
+                p.x += p.vx;
+                p.y += p.vy;
+                if (p.x < -50) p.x = W + 50;
+                if (p.x > W + 50) p.x = -50;
+                if (p.y < -50) p.y = H + 50;
+                if (p.y > H + 50) p.y = -50;
+            }
+            requestAnimationFrame(draw);
+        }
+
+        function hexToRgba(hex, a) {
+            const h = hex.replace('#', '');
+            const bigint = parseInt(h, 16);
+            const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+            return `rgba(${r}, ${g}, ${b}, ${a})`;
+        }
+
+        init(); draw();
+    })();
+
+    /* =====================================================
+       ON-SCROLL REVEAL (intersection observer)
+       ===================================================== */
+    (function () {
+        const revealEls = document.querySelectorAll('[data-reveal]');
+        if (!revealEls.length) return;
+
+        if ('IntersectionObserver' in window) {
+            const obs = new IntersectionObserver((entries) => {
+                for (const e of entries) {
+                    if (e.isIntersecting) {
+                        e.target.classList.add('visible');
+                        e.target.classList.remove('reveal');
+                        obs.unobserve(e.target);
+                    }
+                }
+            }, { root: null, rootMargin: '0px', threshold: 0.12 });
+            revealEls.forEach(el => obs.observe(el));
+        } else {
+            function revealFallback() {
+                for (const el of revealEls) {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < innerHeight - 80) {
+                        el.classList.add('visible');
+                    }
+                }
+            }
+            addEventListener('scroll', revealFallback);
+            addEventListener('load', revealFallback);
+            revealFallback();
+        }
+    })();
+</script>
+
+</html>

@@ -1,0 +1,572 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Document | VaultRelay</title>
+
+    <!-- Font Awesome + Orbitron -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'bootstrap/css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/footer.css' %}">
+    <!-- <link rel="stylesheet" href="{% static 'bootstrap/css/add_document.css' %}"> -->
+
+    <style>
+        /* Add Document Specific Styles */
+        .upload-container {
+            max-width: 800px;
+            margin: 60px auto 40px;
+            /* increased top margin from 60px to 120px */
+            padding: 30px;
+            background: rgba(4, 16, 24, 0.6);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+        }
+
+
+        .upload-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-top: 20px;
+            /* Added padding */
+        }
+
+        .upload-header h1 {
+            font-size: 32px;
+            margin-bottom: 12px;
+            background: linear-gradient(90deg, var(--neon1), var(--neon3));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .upload-header p {
+            color: rgba(234, 246, 255, 0.8);
+            font-size: 16px;
+        }
+
+        /* Rest of your existing CSS styles remain the same */
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--neon3);
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(4, 16, 24, 0.8);
+            border: 1px solid rgba(122, 0, 255, 0.3);
+            border-radius: 8px;
+            color: #eaf6ff;
+            font-family: inherit;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--neon3);
+            box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .upload-area {
+            border: 2px dashed rgba(122, 0, 255, 0.4);
+            border-radius: 12px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 24px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .upload-area:hover {
+            border-color: var(--neon3);
+            background: rgba(4, 16, 24, 0.4);
+        }
+
+        .upload-area.active {
+            border-color: var(--neon2);
+            background: rgba(0, 240, 255, 0.05);
+        }
+
+        .upload-icon {
+            font-size: 48px;
+            color: var(--neon2);
+            margin-bottom: 16px;
+        }
+
+        .upload-text {
+            color: rgba(234, 246, 255, 0.9);
+            margin-bottom: 8px;
+        }
+
+        .upload-hint {
+            color: rgba(234, 246, 255, 0.6);
+            font-size: 14px;
+        }
+
+        #fileInput {
+            display: none;
+        }
+
+        .file-preview {
+            display: flex;
+            align-items: center;
+            background: rgba(4, 16, 24, 0.6);
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .file-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(90deg, var(--neon1), var(--neon3));
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            color: white;
+        }
+
+        .file-info {
+            flex: 1;
+        }
+
+        .file-name {
+            color: #eaf6ff;
+            margin-bottom: 4px;
+            word-break: break-all;
+        }
+
+        .file-size {
+            color: rgba(234, 246, 255, 0.7);
+            font-size: 12px;
+        }
+
+        .remove-file {
+            color: rgba(255, 106, 193, 0.8);
+            cursor: pointer;
+            margin-left: 12px;
+        }
+
+        .remove-file:hover {
+            color: var(--neon1);
+        }
+
+        .security-options {
+            background: rgba(4, 16, 24, 0.6);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .security-title {
+            display: flex;
+            align-items: center;
+            color: var(--neon3);
+            margin-bottom: 16px;
+        }
+
+        .security-title i {
+            margin-right: 10px;
+        }
+
+        .option-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .option-label {
+            margin-left: 12px;
+            color: rgba(234, 246, 255, 0.9);
+            flex: 1;
+        }
+
+        .option-description {
+            color: rgba(234, 246, 255, 0.6);
+            font-size: 13px;
+            margin-left: 34px;
+            margin-top: -8px;
+            margin-bottom: 12px;
+        }
+
+        .btn-upload {
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 600;
+            background: linear-gradient(90deg, #00f0ff, #7a00ff);
+            border: none;
+            border-radius: 8px;
+            color: #041018;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-upload:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+        }
+
+        .btn-upload:disabled {
+            background: rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.4);
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+    </style>
+
+</head>
+
+<body>
+    <!-- Particle canvas & gradient -->
+    <canvas id="particles-canvas"></canvas>
+    <div class="gradient-veil"></div>
+
+    <!-- NAV -->
+    {% include 'navbar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+        <div class="upload-container reveal" data-reveal>
+            <div class="upload-header">
+                <h1>Add New Document</h1>
+                <p>Securely upload and store your important files with military-grade encryption</p>
+            </div>
+
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label for="documentTitle" class="form-label">Document Title</label>
+                    <input type="text" id="documentTitle" class="form-control"
+                        placeholder="e.g. Passport, Will, House Deed" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="documentDescription" class="form-label">Description (Optional)</label>
+                    <textarea id="documentDescription" class="form-control"
+                        placeholder="Add a brief description of this document..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Upload Document</label>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput">
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">Drag & drop your file here or click to browse</div>
+                        <div class="upload-hint">Supports PDF, DOCX, JPG, PNG (Max 50MB)</div>
+                    </div>
+                    <div id="filePreview" style="display: none;">
+                        <div class="file-preview">
+                            <div class="file-icon">
+                                <i class="fas fa-file-pdf" id="fileIcon"></i>
+                            </div>
+                            <div class="file-info">
+                                <div class="file-name" id="fileName"></div>
+                                <div class="file-size" id="fileSize"></div>
+                            </div>
+                            <div class="remove-file" id="removeFile">
+                                <i class="fas fa-times"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="security-options">
+                    <div class="security-title">
+                        <i class="fas fa-lock"></i>
+                        <h3>Security Options</h3>
+                    </div>
+
+                    <div class="option-row">
+                        <input type="checkbox" id="encryptOption" checked>
+                        <label for="encryptOption" class="option-label">Military-Grade Encryption (AES-256)</label>
+                    </div>
+                    <div class="option-description">
+                        Your document will be encrypted before upload and can only be accessed with your private key.
+                    </div>
+
+                    <div class="option-row">
+                        <input type="checkbox" id="backupOption" checked>
+                        <label for="backupOption" class="option-label">Include in Trusted Backup</label>
+                    </div>
+                    <div class="option-description">
+                        This document will be automatically sent to your trusted contact if you become inactive.
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-upload" id="uploadBtn" disabled>
+                    <i class="fas fa-shield-alt"></i> Upload & Secure Document
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    {% include 'footer.html' %}
+
+    <!-- Success Toast -->
+    <div id="successToast"
+        style="position:fixed;bottom:30px;right:30px;background:linear-gradient(90deg,#2ed573,#20b2aa);color:#041018;padding:12px 18px;border-radius:8px;box-shadow:0 12px 40px rgba(46,213,115,0.12);transform:translateX(150%);transition:transform .45s cubic-bezier(.2,.9,.2,1);z-index:1200;display:none;">
+        <i class="fas fa-check-circle"></i>
+        <span style="margin-left:8px">Document uploaded successfully!</span>
+    </div>
+
+    <script>
+        // File upload handling
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.getElementById('fileInput');
+        const filePreview = document.getElementById('filePreview');
+        const fileName = document.getElementById('fileName');
+        const fileSize = document.getElementById('fileSize');
+        const fileIcon = document.getElementById('fileIcon');
+        const removeFile = document.getElementById('removeFile');
+        const uploadBtn = document.getElementById('uploadBtn');
+        const successToast = document.getElementById('successToast');
+
+        // File type to icon mapping
+        const fileIcons = {
+            'pdf': 'file-pdf',
+            'doc': 'file-word',
+            'docx': 'file-word',
+            'xls': 'file-excel',
+            'xlsx': 'file-excel',
+            'jpg': 'file-image',
+            'jpeg': 'file-image',
+            'png': 'file-image',
+            'txt': 'file-alt',
+            'zip': 'file-archive'
+        };
+
+        // Handle drag and drop
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, preventDefaults, false);
+        });
+
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, highlight, false);
+        });
+
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, unhighlight, false);
+        });
+
+        function highlight() {
+            uploadArea.classList.add('active');
+        }
+
+        function unhighlight() {
+            uploadArea.classList.remove('active');
+        }
+
+        // Handle dropped files
+        uploadArea.addEventListener('drop', handleDrop, false);
+        uploadArea.addEventListener('click', () => fileInput.click());
+
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            handleFiles(files);
+        }
+
+        fileInput.addEventListener('change', function () {
+            handleFiles(this.files);
+        });
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                displayFileInfo(file);
+            }
+        }
+
+        function displayFileInfo(file) {
+            // Check file size (max 50MB)
+            if (file.size > 50 * 1024 * 1024) {
+                alert('File size exceeds 50MB limit');
+                return;
+            }
+
+            // Get file extension
+            const ext = file.name.split('.').pop().toLowerCase();
+
+            // Set appropriate icon
+            if (fileIcons[ext]) {
+                fileIcon.className = 'fas fa-' + fileIcons[ext];
+            } else {
+                fileIcon.className = 'fas fa-file';
+            }
+
+            // Display file info
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            filePreview.style.display = 'block';
+            uploadBtn.disabled = false;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(1) + ' ' + sizes[i];
+        }
+
+        // Remove file
+        removeFile.addEventListener('click', function () {
+            fileInput.value = '';
+            filePreview.style.display = 'none';
+            uploadBtn.disabled = true;
+        });
+
+        // Form submission
+        document.getElementById('uploadForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            // Simulate upload (in a real app, you would use AJAX/Fetch)
+            setTimeout(() => {
+                // Show success message
+                successToast.style.display = 'flex';
+                successToast.style.transform = 'translateX(0)';
+
+                // Reset form after delay
+                setTimeout(() => {
+                    successToast.style.transform = 'translateX(150%)';
+                    this.reset();
+                    filePreview.style.display = 'none';
+                    uploadBtn.disabled = true;
+                }, 3000);
+            }, 1500);
+        });
+
+        /* =====================================================
+           PARTICLES (canvas) - neon multi-color floating dots
+           ===================================================== */
+        (function () {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let W = canvas.width = innerWidth;
+            let H = canvas.height = innerHeight;
+            window.addEventListener('resize', () => { W = canvas.width = innerWidth; H = canvas.height = innerHeight; init(); });
+
+            const colors = ['#ff007f', '#7a00ff', '#00f0ff', '#00ff9e'];
+            let particles = [];
+
+            function rnd(min, max) { return Math.random() * (max - min) + min }
+
+            function createParticle() {
+                return {
+                    x: rnd(0, W),
+                    y: rnd(0, H),
+                    vx: rnd(-0.25, 0.25),
+                    vy: rnd(-0.25, 0.25),
+                    r: rnd(0.6, 2.6),
+                    c: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: rnd(0.06, 0.28)
+                };
+            }
+
+            function init() {
+                particles = [];
+                const count = Math.max(Math.min(Math.floor((W * H) / 60000), 160), 60);
+                for (let i = 0; i < count; i++) particles.push(createParticle());
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                // soft glow background
+                for (let p of particles) {
+                    ctx.beginPath();
+                    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8);
+                    grad.addColorStop(0, hexToRgba(p.c, p.alpha * 1.2));
+                    grad.addColorStop(0.15, hexToRgba(p.c, p.alpha * 0.7));
+                    grad.addColorStop(1, hexToRgba('#000000', 0));
+                    ctx.fillStyle = grad;
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // move
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < -50) p.x = W + 50;
+                    if (p.x > W + 50) p.x = -50;
+                    if (p.y < -50) p.y = H + 50;
+                    if (p.y > H + 50) p.y = -50;
+                }
+                requestAnimationFrame(draw);
+            }
+
+            function hexToRgba(hex, a) {
+                const h = hex.replace('#', '');
+                const bigint = parseInt(h, 16);
+                const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+                return `rgba(${r}, ${g}, ${b}, ${a})`;
+            }
+
+            init(); draw();
+        })();
+
+        /* =====================================================
+           ON-SCROLL REVEAL (intersection observer)
+           ===================================================== */
+        (function () {
+            const revealEls = document.querySelectorAll('[data-reveal]');
+            if ('IntersectionObserver' in window) {
+                const obs = new IntersectionObserver((entries) => {
+                    for (const e of entries) {
+                        if (e.isIntersecting) {
+                            e.target.classList.add('visible');
+                            e.target.classList.remove('reveal');
+                            obs.unobserve(e.target);
+                        }
+                    }
+                }, { root: null, rootMargin: '0px', threshold: 0.12 });
+                revealEls.forEach(el => obs.observe(el));
+            } else {
+                function revealFallback() {
+                    for (const el of revealEls) {
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top < innerHeight - 80) {
+                            el.classList.add('visible');
+                        }
+                    }
+                }
+                addEventListener('scroll', revealFallback);
+                addEventListener('load', revealFallback);
+                revealFallback();
+            }
+        })();
+    </script>
+</body>
+
+</html>

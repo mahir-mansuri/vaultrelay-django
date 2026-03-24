@@ -1,0 +1,173 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - VaultRelay</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500&family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+<body>
+    <!-- Cyber Background Elements -->
+    <div class="cyber-bg">
+        <div class="cyber-grid"></div>
+        <div class="cyber-scanline"></div>
+        <div class="cyber-particles"></div>
+    </div>
+    
+    <!-- Main Container -->
+    <div class="container vault-container">
+        <div class="hologram-container">
+            <div class="hologram-glare"></div>
+            
+            <!-- Corner accents -->
+            <div class="corner-accent corner-top-left"></div>
+            <div class="corner-accent corner-top-right"></div>
+            <div class="corner-accent corner-bottom-left"></div>
+            <div class="corner-accent corner-bottom-right"></div>
+            
+            <div class="vault-form">
+                <h2 class="vault-header">
+                    <span class="cyber-glitch" data-text="NEO-VAULT 3000">Create Your Vault</span>
+                </h2>
+                
+                <!-- Login Link for Existing Users -->
+                <div class="cyber-login-link">
+                    <p>Already have an account? <a href="{% url 'login' %}" class="cyber-link">Login here</a></p>
+                </div>
+                
+                {% if error %}
+                <div class="alert alert-danger cyber-alert" role="alert">
+                    <i class="fas fa-exclamation-triangle me-2"></i>
+                    <div>{{ error }}</div>
+                </div>
+                {% endif %}
+                
+                <form method="POST" class="registration-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    
+                    <div class="row cyber-row">
+                        <div class="col-md-4">
+                            <div class="cyber-input">
+                                <input type="text" name="fname" class="form-control cyber-input-field" placeholder="FIRST NAME" required>
+                                <span class="cyber-underline"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="cyber-input">
+                                <input type="text" name="mname" class="form-control cyber-input-field" placeholder="MIDDLE NAME">
+                                <span class="cyber-underline"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="cyber-input">
+                                <input type="text" name="lname" class="form-control cyber-input-field" placeholder="LAST NAME" required>
+                                <span class="cyber-underline"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="cyber-input">
+                        <input type="date" name="dob" class="form-control cyber-input-field" required>
+                        <span class="cyber-underline"></span>
+                    </div>
+
+                    <div class="cyber-input">
+                        <input type="email" name="user_email" class="form-control cyber-input-field" placeholder="YOUR EMAIL" required>
+                        <span class="cyber-underline"></span>
+                    </div>
+
+                    <div class="cyber-security-tips">
+                        <h3 class="cyber-security-title">SECURITY RECOMMENDATIONS</h3>
+                        <ul class="cyber-security-list">
+                            <li>Choose a trusted person you can rely on in emergencies</li>
+                            <li>This person will help recover your account if needed</li>
+                            <li>Ensure their email is correct and accessible</li>
+                        </ul>
+                    </div>
+
+                    <div class="cyber-input">
+                        <input type="email" name="trusted_email" class="form-control cyber-input-field" placeholder="TRUSTED PERSON'S EMAIL" required>
+                        <span class="cyber-underline"></span>
+                    </div>
+
+                    <div class="cyber-input">
+                        <input type="text" name="trusted_name" class="form-control cyber-input-field" placeholder="TRUSTED PERSON NAME" required>
+                        <span class="cyber-underline"></span>
+                    </div>
+
+                    <div class="cyber-security-section">
+                        <h5 class="cyber-section-title">SECURITY CREDENTIALS</h5>
+                        <div class="row cyber-row">
+                            <div class="col-md-6">
+                                <div class="cyber-input">
+                                    <input type="password" name="pass1" class="form-control cyber-input-field" placeholder="ENCRYPTION PASSWORD" required maxlength="6">
+                                    <span class="cyber-underline"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="cyber-input">
+                                    <input type="password" name="pass2" class="form-control cyber-input-field" placeholder="CONFIRM PASSWORD" required maxlength="6">
+                                    <span class="cyber-underline"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="password-strength mt-2">
+                            <div class="progress" style="height: 5px; background: rgba(0, 240, 255, 0.1);">
+                                <div class="progress-bar bg-danger" role="progressbar" style="width: 0%"></div>
+                            </div>
+                            <small class="text-muted" style="color: var(--cyber-blue) !important;">Password strength: <span id="strength-text">Weak</span></small>
+                        </div>
+                    </div>
+
+                    <div class="cyber-security-section">
+                        <h5 class="cyber-section-title">RECOVERY KEY</h5>
+                        <div class="cyber-input">
+                            <input type="text" name="secret" class="form-control cyber-input-field" placeholder="YOUR SECRET RECOVERY PHRASE" required>
+                            <span class="cyber-underline"></span>
+                        </div>
+                        
+                        <div class="cyber-security-tips">
+                            <h3 class="cyber-security-title">ABOUT YOUR RECOVERY PHRASE</h3>
+                            <ul class="cyber-security-list">
+                                <li>This is your last resort for account recovery</li>
+                                <li>Write it down and store it physically</li>
+                                <li>Do not store digitally or share with anyone</li>
+                                <li>Should be at least 12 words long</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div>
+                        <label>Profile Image</label>
+                        <input type="file" name="profile_image" accept="image/*" required>
+
+                    </div>
+                    <button type="submit" class="cyber-button">
+                        <span class="cyber-btn-text">
+                            <i class="fas fa-lock-open"></i> INITIALIZE DIGITAL LOCKER
+                        </span>
+                        <span class="cyber-btn-explosion"></span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal Effect -->
+    <div class="terminal-effect">
+        <div class="terminal-text">
+            INITIALIZING VAULTRELAY SYSTEM...  100% COMPLETE || SECURITY: QUANTUM LEVEL || ENCRYPTION: AES-512 BIT || BIOMETRIC SCAN: ACTIVE || FIREWALL: ENGAGED
+            <span class="terminal-cursor"></span>
+        </div>
+    </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+</html>
+
+

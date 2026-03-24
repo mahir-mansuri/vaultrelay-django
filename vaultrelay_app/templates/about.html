@@ -1,0 +1,74 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>About Us - VaultRelay</title>
+
+    <!-- Font Awesome + Orbitron -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/about.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+</head>
+
+<body>
+    <!-- NAV -->
+    {% include 'navbar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+<section id="about-extra" style="padding:60px 20px;max-width:900px;margin:auto;text-align:center;">
+  <p style="
+    font-size:1.1rem;
+    line-height:1.8;
+    background:linear-gradient(90deg, #00f0ff, #ff007f);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+    text-shadow:0 0 8px rgba(0,240,255,0.6), 0 0 12px rgba(255,0,127,0.4);
+  ">
+  <br>
+    At VaultRelay, we go beyond simple file storage. Our platform is built to give you
+    full control over your data with intelligent access tracking, customizable security
+    rules, and advanced recovery options. Whether you’re safeguarding personal records,
+    business documents, or creative projects, VaultRelay adapts to your needs — ensuring
+    your information stays private, accessible, and protected for the long term.
+  </p>
+</section>
+
+
+
+
+        <section id="team">
+            <div class="section-header"><h2>Meet Our Team</h2></div>
+            <div class="team-members">
+                <div class="member fade-in"><img src="https://cdn-icons-png.flaticon.com/512/201/201634.png" alt="Natasha"><h4>Natasha</h4><p>Backend Developer — Builds secure, scalable data systems.</p></div>
+                <div class="member fade-in"><img src="https://cdn-icons-png.flaticon.com/512/236/236831.png" alt="Mahir"><h4>Mahir</h4><p>Frontend Developer — Designs intuitive, high-performance UI.</p></div>
+                <div class="member fade-in"><img src="https://cdn-icons-png.flaticon.com/512/236/236831.png" alt="Mayur"><h4>Mayur</h4><p>Documentation Specialist — Creates precise technical docs.</p></div>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    {% include 'footer.html' %}
+
+<script>
+// fade-in scroll animation
+const faders=document.querySelectorAll('.fade-in');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){entry.target.classList.add('visible');observer.unobserve(entry.target);}
+  });
+},{threshold:0.2});
+faders.forEach(fader=>observer.observe(fader));
+
+
+</script>
+</body>
+</html>

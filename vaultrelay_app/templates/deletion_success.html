@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Account Deleted</title>
+    <link rel="stylesheet" href="{% static 'css/deletion_success.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        /* Fallback styles if CSS is missing */
+        .container { max-width: 640px; margin: 6rem auto; padding: 2rem; text-align: center; }
+        .btn { display: inline-block; margin-top: 1rem; padding: .6rem 1rem; background: #0d6efd; color: #fff; text-decoration: none; border-radius: .25rem; }
+    </style>
+    </head>
+<body>
+    <div class="container">
+        <h2>Goodbye {{ fname }} 👋</h2>
+        <p>Your account has been deleted successfully.</p>
+        <p>All your files are being sent to <strong>{{ user_email }}</strong>.</p>
+        <p>If you need help in the future, feel free to sign up again.</p>
+        <a href="{% url 'login' %}" class="btn">Return to Login</a>
+    </div>
+</body>
+</html>

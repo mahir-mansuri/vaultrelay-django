@@ -1,0 +1,299 @@
+
+        :root {
+            --vault-dark: #0a192f;
+            --vault-blue: #00b4d8;
+            --vault-accent: #48cae4;
+            --vault-light: #caf0f8;
+            --vault-glass: rgba(10, 25, 47, 0.7);
+            --vault-border: rgba(74, 202, 228, 0.3);
+        }
+
+        /* Dramatic new background with animated gradient */
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background:
+                linear-gradient(-45deg, #0a192f, #0a1a3a, #0b1e44, #0a192f);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        @keyframes gradientBG {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* Glass card with floating effect */
+        .auth-container {
+            width: 100%;
+            max-width: 600px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .auth-card {
+            background: var(--vault-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 24px;
+            padding: 48px;
+            border: 1px solid var(--vault-border);
+            box-shadow:
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 0 40px rgba(0, 180, 216, 0.15),
+                inset 0 0 16px rgba(74, 202, 228, 0.1);
+            transition: all 0.4s ease;
+        }
+
+        .auth-card:hover {
+            transform: translateY(-5px);
+            box-shadow:
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 0 60px rgba(0, 180, 216, 0.2),
+                inset 0 0 24px rgba(74, 202, 228, 0.15);
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-15px);
+            }
+
+            100% {
+                transform: translateY(0px);
+            }
+        }
+
+        /* Modern typography */
+        .auth-header {
+            color: var(--vault-light);
+            font-weight: 700;
+            font-size: 28px;
+            margin-bottom: 12px;
+            text-align: center;
+            letter-spacing: 0.5px;
+            text-shadow: 0 2px 8px rgba(0, 180, 216, 0.3);
+        }
+
+        .auth-subheader {
+            color: var(--vault-accent);
+            font-size: 16px;
+            text-align: center;
+            margin-bottom: 40px;
+            line-height: 1.6;
+            font-weight: 400;
+            opacity: 0.9;
+        }
+
+        /* Futuristic OTP inputs */
+        .code-inputs {
+            display: flex;
+            gap: 16px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+
+        .code-input {
+            width: 60px;
+            height: 72px;
+            background: rgba(20, 40, 70, 0.4);
+            border: 2px solid var(--vault-border);
+            color: white;
+            border-radius: 16px;
+            font-size: 28px;
+            font-weight: 600;
+            text-align: center;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow:
+                inset 0 2px 4px rgba(0, 0, 0, 0.1),
+                0 4px 16px rgba(0, 180, 216, 0.1);
+        }
+
+        .code-input:focus {
+            border-color: var(--vault-blue);
+            box-shadow:
+                0 0 0 3px rgba(0, 180, 216, 0.3),
+                0 8px 24px rgba(0, 180, 216, 0.2);
+            transform: scale(1.05);
+        }
+
+        /* Holographic continue button */
+        .verify-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg,
+                    rgba(0, 180, 216, 0.9),
+                    rgba(0, 150, 199, 0.9));
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-weight: 600;
+            font-size: 17px;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow:
+                0 4px 20px rgba(0, 180, 216, 0.4),
+                0 0 0 1px rgba(0, 180, 216, 0.3);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .verify-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.2),
+                    transparent);
+            transition: all 0.6s ease;
+            z-index: -1;
+        }
+
+        .verify-btn:hover {
+            transform: translateY(-3px);
+            box-shadow:
+                0 6px 28px rgba(0, 180, 216, 0.5),
+                0 0 0 1px rgba(0, 180, 216, 0.4);
+        }
+
+        .verify-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Cyberpunk resend button */
+        .resend-container {
+            margin-top: 32px;
+            text-align: center;
+        }
+
+        .resend-btn {
+            background: rgba(10, 25, 47, 0.6);
+            border: 1px solid var(--vault-accent);
+            color: var(--vault-accent);
+            font-size: 15px;
+            font-weight: 500;
+            padding: 12px 24px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            box-shadow:
+                0 0 16px rgba(74, 202, 228, 0.2),
+                inset 0 0 12px rgba(74, 202, 228, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resend-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(to bottom right,
+                    transparent,
+                    rgba(74, 202, 228, 0.1),
+                    transparent);
+            transform: rotate(30deg);
+            transition: all 0.8s ease;
+        }
+
+        .resend-btn:hover {
+            background: rgba(74, 202, 228, 0.15);
+            box-shadow:
+                0 0 24px rgba(74, 202, 228, 0.3),
+                inset 0 0 16px rgba(74, 202, 228, 0.2);
+            text-shadow: 0 0 8px rgba(202, 240, 248, 0.5);
+        }
+
+        .resend-btn:hover::before {
+            transform: rotate(30deg) translate(20%, 20%);
+        }
+
+        .resend-btn:disabled {
+            border-color: rgba(74, 202, 228, 0.2);
+            color: rgba(202, 240, 248, 0.4);
+            box-shadow: none;
+            text-shadow: none;
+            cursor: not-allowed;
+        }
+
+        /* Status notifications */
+        .resend-message {
+            margin-top: 20px;
+            padding: 14px 20px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-block;
+            animation: fadeIn 0.4s ease-out;
+            backdrop-filter: blur(4px);
+        }
+
+        .resend-message.success {
+            background: rgba(82, 183, 136, 0.15);
+            color: #52b788;
+            border: 1px solid rgba(82, 183, 136, 0.3);
+            box-shadow: 0 0 20px rgba(82, 183, 136, 0.2);
+        }
+
+        .resend-message.error {
+            background: rgba(255, 107, 107, 0.15);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            box-shadow: 0 0 20px rgba(255, 107, 107, 0.2);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive design */
+        @media (max-width: 480px) {
+            .auth-card {
+                padding: 36px 24px;
+                border-radius: 20px;
+                width: 80%;
+            }
+
+            .code-input {
+                width: 50px;
+                height: 60px;
+                font-size: 24px;
+            }
+
+            .verify-btn {
+                padding: 16px;
+            }
+        }

@@ -1,0 +1,481 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VaultRelay Chatbot</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .chat-container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .chat-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .chat-header h2 {
+            margin: 0;
+            font-weight: 600;
+        }
+        
+        .chat-header p {
+            margin: 5px 0 0 0;
+            opacity: 0.9;
+        }
+        
+        .chat-messages {
+            height: 500px;
+            overflow-y: auto;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+        
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+        
+        .message.user {
+            justify-content: flex-end;
+        }
+        
+        .message.bot {
+            justify-content: flex-start;
+        }
+        
+        .message-content {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            position: relative;
+            word-wrap: break-word;
+        }
+        
+        .message.user .message-content {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+        
+        .message.bot .message-content {
+            background: white;
+            color: #333;
+            border: 1px solid #e9ecef;
+            border-bottom-left-radius: 5px;
+        }
+        
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+        
+        .message.user .message-time {
+            text-align: right;
+        }
+        
+        .message.bot .message-time {
+            text-align: left;
+        }
+        
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+        
+        .input-group {
+            position: relative;
+        }
+        
+        .form-control {
+            border-radius: 25px;
+            border: 2px solid #e9ecef;
+            padding: 12px 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .btn-send {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-send:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-send:disabled {
+            opacity: 0.6;
+            transform: none;
+        }
+        
+        .typing-indicator {
+            display: none;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 18px;
+            border-bottom-left-radius: 5px;
+            max-width: 70%;
+        }
+        
+        .typing-dots {
+            display: flex;
+            align-items: center;
+        }
+        
+        .typing-dots span {
+            height: 8px;
+            width: 8px;
+            background: #667eea;
+            border-radius: 50%;
+            margin: 0 2px;
+            animation: typing 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dots span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-dots span:nth-child(2) { animation-delay: -0.16s; }
+        
+        @keyframes typing {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1); }
+        }
+        
+        .welcome-message {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+        
+        .welcome-message i {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        
+        .quick-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .quick-action-btn {
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 20px;
+            padding: 8px 16px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .quick-action-btn:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+        
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            color: #667eea !important;
+        }
+        
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: #667eea !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">
+                <i class="fas fa-shield-alt me-2"></i>VaultRelay
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about' %}">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'feature' %}">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'contact' %}">Contact</a>
+                    </li>
+                    {% if request.session.authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'homeuser' %}">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">Sign Up</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div style="margin-top: 80px;">
+        <div class="chat-container">
+            <div class="chat-header">
+                <h2><i class="fas fa-robot me-2"></i>VaultRelay Assistant</h2>
+                <p>Your secure document storage helper</p>
+            </div>
+            
+            <div class="chat-messages" id="chatMessages">
+                <div class="welcome-message">
+                    <i class="fas fa-comments"></i>
+                    <h4>Welcome to VaultRelay Chatbot!</h4>
+                    <p>I'm here to help you with questions about our secure document storage service.</p>
+                    <div class="quick-actions">
+                        <div class="quick-action-btn" onclick="sendQuickMessage('hi')">Say Hi</div>
+                        <div class="quick-action-btn" onclick="sendQuickMessage('What is VaultRelay?')">What is VaultRelay?</div>
+                        <div class="quick-action-btn" onclick="sendQuickMessage('How secure is my data?')">Security Info</div>
+                        <div class="quick-action-btn" onclick="sendQuickMessage('bye')">Say Bye</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="typing-dots">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="input-group">
+                    <input type="text" class="form-control" id="messageInput" placeholder="Type your message here..." maxlength="1000">
+                    <button class="btn btn-send" id="sendButton" onclick="sendMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        let isLoading = false;
+        
+        // Load chat history on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadChatHistory();
+            
+            // Focus on input
+            document.getElementById('messageInput').focus();
+            
+            // Enter key to send message
+            document.getElementById('messageInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && !isLoading) {
+                    sendMessage();
+                }
+            });
+        });
+        
+        function loadChatHistory() {
+            fetch('/chatbot/history/')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.messages && data.messages.length > 0) {
+                        // Clear welcome message
+                        document.getElementById('chatMessages').innerHTML = '';
+                        
+                        // Add all messages
+                        data.messages.forEach(msg => {
+                            addMessage(msg.message, msg.is_user, msg.timestamp);
+                        });
+                        
+                        scrollToBottom();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading chat history:', error);
+                });
+        }
+        
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message || isLoading) return;
+            
+            // Add user message to chat
+            addMessage(message, true);
+            
+            // Clear input
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            // Send to server
+            isLoading = true;
+            updateSendButton();
+            
+            fetch('/chatbot/api/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: 'message=' + encodeURIComponent(message)
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideTypingIndicator();
+                
+                if (data.error) {
+                    addMessage('Sorry, there was an error processing your message.', false);
+                } else {
+                    addMessage(data.response, false);
+                }
+                
+                isLoading = false;
+                updateSendButton();
+                input.focus();
+            })
+            .catch(error => {
+                hideTypingIndicator();
+                addMessage('Sorry, there was an error connecting to the server.', false);
+                isLoading = false;
+                updateSendButton();
+                console.error('Error:', error);
+            });
+        }
+        
+        function sendQuickMessage(message) {
+            document.getElementById('messageInput').value = message;
+            sendMessage();
+        }
+        
+        function addMessage(message, isUser, timestamp = null) {
+            const chatMessages = document.getElementById('chatMessages');
+            
+            // Remove welcome message if it exists
+            const welcomeMessage = chatMessages.querySelector('.welcome-message');
+            if (welcomeMessage) {
+                welcomeMessage.remove();
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isUser ? 'user' : 'bot'}`;
+            
+            const currentTime = timestamp || new Date().toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                hour12: false 
+            });
+            
+            messageDiv.innerHTML = `
+                <div class="message-content">
+                    ${message}
+                    <div class="message-time">${currentTime}</div>
+                </div>
+            `;
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'block';
+            scrollToBottom();
+        }
+        
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+        }
+        
+        function scrollToBottom() {
+            const chatMessages = document.getElementById('chatMessages');
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        function updateSendButton() {
+            const sendButton = document.getElementById('sendButton');
+            if (isLoading) {
+                sendButton.disabled = true;
+                sendButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+            } else {
+                sendButton.disabled = false;
+                sendButton.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            }
+        }
+        
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,181 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>VaultRelay - Enter Code</title>
+    <link rel="stylesheet" href="{% static 'css/otp.css' %}">
+</head>
+<body>
+    <div class="auth-container">
+        <div class="auth-card">
+            <h1 class="auth-header">Verify Your Identity</h1>
+            <p class="auth-subheader">Enter the 6-digit code sent to your email</p>
+            
+            <!-- Display Django messages (e.g., "Invalid OTP") -->
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    {{ message }}
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" action="{% url 'otp' %}">
+                {% csrf_token %}
+                
+                <div class="code-inputs">
+                    <input type="text" class="code-input" maxlength="1" pattern="\d" required 
+                           inputmode="numeric" autocomplete="one-time-code">
+                    <input type="text" class="code-input" maxlength="1" pattern="\d" required
+                           inputmode="numeric" autocomplete="one-time-code">
+                    <input type="text" class="code-input" maxlength="1" pattern="\d" required
+                           inputmode="numeric" autocomplete="one-time-code">
+                    <input type="text" class="code-input" maxlength="1" pattern="\d" required
+                           inputmode="numeric" autocomplete="one-time-code">
+                    <input type="text" class="code-input" maxlength="1" pattern="\d" required
+                           inputmode="numeric" autocomplete="one-time-code">
+                    <input type="text" class="code-input" maxlength="1" pattern="\d" required
+                           inputmode="numeric" autocomplete="one-time-code">
+                </div>
+                
+                <input type="hidden" name="verification_code" id="full-code">
+                
+                <button type="submit" class="verify-btn">Continue</button>
+            </form>
+            
+            <!-- Enhanced Resend OTP with timer -->
+            <div class="resend-container">
+                <form method="POST" action="{% url 'resend_otp' %}" class="resend-form" id="resendForm">
+                    {% csrf_token %}
+                    <button type="submit" class="resend-link" id="resendBtn">
+                        Resend code (<span id="countdown">30</span>s)
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Automatically focus next input and combine all inputs into one hidden field
+        const inputs = document.querySelectorAll('.code-input');
+        const fullCodeInput = document.getElementById('full-code');
+        
+        inputs.forEach((input, index) => {
+            // Focus first input on page load
+            if (index === 0) {
+                input.focus();
+            }
+            
+            input.addEventListener('input', (e) => {
+                if (e.target.value.length === 1) {
+                    if (index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                }
+                updateFullCode();
+            });
+            
+            input.addEventListener('keydown', (e) => {
+                if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                    inputs[index - 1].focus();
+                }
+            });
+            
+            // Prevent non-numeric input
+            input.addEventListener('keypress', (e) => {
+                if (e.key < '0' || e.key > '9') {
+                    e.preventDefault();
+                }
+            });
+        });
+        
+        function updateFullCode() {
+            fullCodeInput.value = Array.from(inputs).map(input => input.value).join('');
+        }
+
+        // Resend OTP timer functionality
+        let resendBtn = document.getElementById('resendBtn');
+        let countdownEl = document.getElementById('countdown');
+        const resendForm = document.getElementById('resendForm');
+        let timeLeft = 30;
+        let timer;
+        
+        // Start countdown on page load
+        startTimer();
+        
+        function startTimer() {
+            clearInterval(timer); // Clear any existing timer
+            timeLeft = 30;
+            resendBtn.disabled = true;
+            resendBtn.innerHTML = `Resend code (<span id="countdown">${timeLeft}</span>s)`;
+            countdownEl = document.getElementById('countdown');
+            
+            timer = setInterval(() => {
+                timeLeft--;
+                countdownEl.textContent = timeLeft;
+                
+                if (timeLeft <= 0) {
+                    clearInterval(timer);
+                    resendBtn.disabled = false;
+                    resendBtn.innerHTML = 'Resend code';
+                }
+            }, 1000);
+        }
+        
+        // Handle form submission with AJAX for better UX
+        resendForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (resendBtn.disabled) return;
+            
+            // Show loading state
+            resendBtn.innerHTML = '<span class="spinner">Sending...</span>';
+            resendBtn.disabled = true;
+            
+            fetch("{% url 'resend_otp' %}", {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+            })
+            .then(response => {
+                if (!response.ok) throw new Error('Network response was not ok');
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // Restart timer on successful resend
+                    startTimer();
+                    showMessage('New verification code sent!', 'success');
+                } else {
+                    throw new Error(data.message || 'Failed to resend code');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resendBtn.innerHTML = 'Try again';
+                resendBtn.disabled = false;
+                showMessage(error.message || 'Failed to resend code. Please try again.', 'error');
+            });
+        });
+        
+        function showMessage(message, type) {
+            // Create or update a message element
+            let messageEl = document.querySelector('.resend-message');
+            if (!messageEl) {
+                messageEl = document.createElement('div');
+                messageEl.className = `resend-message alert-${type}`;
+                resendForm.parentNode.insertBefore(messageEl, resendForm.nextSibling);
+            }
+            messageEl.textContent = message;
+            
+            // Remove message after 5 seconds
+            setTimeout(() => {
+                messageEl.remove();
+            }, 5000);
+        }
+    </script>
+</body>
+</html>

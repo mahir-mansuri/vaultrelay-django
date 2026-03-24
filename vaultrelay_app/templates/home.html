@@ -1,0 +1,1330 @@
+{%load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VaultRelay</title>
+
+    <!-- Font Awesome + Orbitron -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- Split CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <!-- Add this line after other CSS links -->
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <style>
+        /* Chat Messages Scrollbar Styling */
+        #chatMessages::-webkit-scrollbar {
+            width: 6px;
+        }
+        #chatMessages::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.02);
+            border-radius: 10px;
+        }
+        #chatMessages::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg,#7a00ff,#00f0ff);
+            border-radius: 10px;
+        }
+        #chatMessages::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(90deg,#00f0ff,#ff6ac1);
+        }
+        
+        /* Chat Input Focus */
+        #chatInput:focus {
+            border-color: #7a00ff !important;
+            box-shadow: 0 0 0 2px rgba(122,0,255,0.1);
+        }
+        
+        /* Responsive Chatbot */
+        @media (max-width: 768px) {
+            #chatbotButton {
+                width: 56px !important;
+                height: 56px !important;
+                bottom: 100px !important;
+            }
+            #chatbotButton i {
+                font-size: 24px !important;
+            }
+            #chatbotWindow {
+                width: calc(100vw - 40px) !important;
+                right: 20px !important;
+                bottom: 160px !important;
+                height: 420px !important;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            #chatbotWindow {
+                width: calc(100vw - 20px) !important;
+                right: 10px !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Particle canvas & gradient -->
+    <canvas id="particles-canvas"></canvas>
+    <div class="gradient-veil"></div>
+
+    <!-- Feature Slide Overlay (keeps original modal behavior) -->
+    <div class="feature-slide-overlay" id="featureSlideOverlay">
+        <button class="feature-slide-close" id="featureSlideClose"><i class="fas fa-times"></i></button>
+        <div class="feature-slide-content" id="featureSlideContent">
+            <div style="text-align:center;">
+                <div style="font-size:44px;color:var(--neon2);margin-bottom:12px"><i class="fas fa-lock"></i></div>
+                <h2 style="margin-bottom:8px;color:#eaf6ff">Military-Grade Encryption</h2>
+                <p style="color:rgba(234,246,255,0.9);line-height:1.6">Your documents are encrypted with AES-256
+                    encryption, the same standard used by governments and financial institutions.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    {% include 'navbar.html' %}
+
+
+    <!-- MAIN CONTENT -->
+    <main class="container" style="padding-top:18px;">
+
+
+        <!-- HERO -->
+        <section class="hero" id="home">
+
+            <div class="hero-content reveal" data-reveal>
+                <h1>Secure Your Documents <br><span
+                        style="background:linear-gradient(90deg,var(--neon1),var(--neon2),var(--neon3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent">With
+                        Trusted Backup</span></h1>
+                <p>VaultRelay stores your important documents securely and automatically transfers them to your trusted
+                    contact if you become inactive. Your data is always protected with end-to-end encryption.</p>
+                <div class="hero-buttons" role="group" aria-label="hero actions">
+                    <!-- Get Started (neon multi color) -->
+                    <a href="{% url 'signup' %}" class="btn btn-primary" title="Get Started">
+                        <i class="fas fa-rocket"></i>
+                        Get Started
+                    </a>
+
+                    <!-- Watch Demo launches modal -->
+                    <button id="watchDemoBtn" class="btn btn-outline" title="Watch Demo">
+                        <i class="fas fa-play-circle" style="color:var(--neon3)"></i>
+                        Watch Demo
+                    </button>
+                </div>
+            </div>
+
+            <!-- Right side card stack (non-overlapping vertical) -->
+            <div class="hero-image reveal" data-reveal>
+                <div class="document-stack" id="docStack" aria-hidden="false">
+                    <div class="document-card doc-1" data-index="1" role="article" aria-label="Passport file">
+                        <div class="document-card-header doc-head">
+                            <div class="document-icon"><i class="fas fa-file-pdf"></i></div>
+                            <i class="fas fa-ellipsis-h" style="color:rgba(255,255,255,0.6)"></i>
+                        </div>
+                        <div class="document-name">Passport.pdf</div>
+                        <div class="document-meta">
+                            <span>2.4 MB</span>
+                            <span>Last updated: 2 days ago</span>
+                        </div>
+                        <div class="security-badge"><i class="fas fa-lock"></i> Encrypted</div>
+                    </div>
+
+                    <div class="document-card doc-2" data-index="2" role="article" aria-label="Will file">
+                        <div class="document-card-header doc-head">
+                            <div class="document-icon" style="background: linear-gradient(90deg,#ffa2d6,#7a00ff)"><i
+                                    class="fas fa-file-contract"></i></div>
+                            <i class="fas fa-ellipsis-h" style="color:rgba(255,255,255,0.6)"></i>
+                        </div>
+                        <div class="document-name">Will.docx</div>
+                        <div class="document-meta">
+                            <span>1.1 MB</span>
+                            <span>Last updated: 1 week ago</span>
+                        </div>
+                    </div>
+
+                    <div class="document-card doc-3" data-index="3" role="article" aria-label="House deed file">
+                        <div class="document-card-header doc-head">
+                            <div class="document-icon" style="background: linear-gradient(90deg,#00f0ff,#00ff9e)"><i
+                                    class="fas fa-file-image"></i></div>
+                            <i class="fas fa-ellipsis-h" style="color:rgba(255,255,255,0.6)"></i>
+                        </div>
+                        <div class="document-name">House Deed.jpg</div>
+                        <div class="document-meta">
+                            <span>3.7 MB</span>
+                            <span>Last updated: 3 days ago</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FEATURES (removed Cloud Backup and removed Military-grade encryption per request) -->
+        <section class="features" id="features">
+            <div class="section-header reveal" data-reveal>
+                <h2>Why Choose VaultRelay</h2>
+                <p>We provide the most secure and reliable document storage solution with unique backup features for
+                    your peace of mind.</p>
+            </div>
+
+            <div class="features-grid">
+                <!-- removed Cloud Backup & removed Military-Grade Encryption (per your request) -->
+                <div class="feature-card reveal" data-reveal>
+                    <div class="feature-icon" style="background: linear-gradient(90deg,#7a00ff,#00f0ff)"><i
+                            class="fas fa-user-shield"></i></div>
+                    <h3>Trusted Contact System</h3>
+                    <p>If you become inactive, your documents are automatically sent to your designated trusted contact
+                        using a secret code.</p>
+                </div>
+
+                <div class="feature-card reveal" data-reveal>
+                    <div class="feature-icon" style="background: linear-gradient(90deg,#00f0ff,#00ff9e)"><i
+                            class="fas fa-history"></i></div>
+                    <h3>Activity Monitoring</h3>
+                    <p>Our system continuously monitors your activity and only triggers the backup protocol after
+                        confirmed inactivity.</p>
+                </div>
+
+                <div class="feature-card reveal" data-reveal>
+                    <div class="feature-badge"
+                        style="position:absolute;top:12px;right:12px;background:linear-gradient(90deg,#00ff9e,#00f0ff);color:#041018;padding:6px 10px;border-radius:999px;font-weight:800;font-size:12px">
+                        Popular</div>
+                    <div class="feature-icon" style="background: linear-gradient(90deg,#ff6ac1,#7a00ff)"><i
+                            class="fas fa-file-upload"></i></div>
+                    <h3>Any File Type</h3>
+                    <p>Store any type of document - PDFs, Word files, images, and more. We support all common file
+                        formats.</p>
+                </div>
+
+                <div class="feature-card reveal" data-reveal>
+                    <div class="feature-icon" style="background: linear-gradient(90deg,#00ff9e,#ff6ac1)"><i
+                            class="fas fa-mobile-alt"></i></div>
+                    <h3>Cross-Platform Access</h3>
+                    <p>Access your documents from anywhere with our web and mobile applications for all major platforms.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- rest of content unchanged (showcase, how it works, testimonials, pricing, cta, footer) -->
+        <section class="feature-showcase reveal" data-reveal>
+            <div class="showcase-container">
+                <div class="showcase-content">
+                    <h2 style="font-size:28px;margin-bottom:8px">Advanced Document Management</h2>
+                    <p style="color:rgba(234,246,255,0.9);max-width:720px">Our platform offers powerful tools to
+                        organize, share, and protect your most important documents with ease.</p>
+
+                    <div class="feature-highlights" style="margin-top:18px">
+                        <div class="highlight-item reveal" data-reveal
+                            style="display:flex;gap:18px;align-items:flex-start;margin-bottom:18px">
+                            <div class="highlight-icon"
+                                style="width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--neon2),var(--neon3))">
+                                <i class="fas fa-lock" style="color:white"></i>
+                            </div>
+                            <div class="highlight-content">
+                                <h4 style="margin-bottom:6px">Encryption using Fernet</h4>
+                                <p style="color:rgba(234,246,255,0.85)">Advanced cryptographic protection using Fernet symmetric encryption for maximum document security.</p>
+                            </div>
+                        </div>
+
+                        <div class="highlight-item reveal" data-reveal
+                            style="display:flex;gap:18px;align-items:flex-start;margin-bottom:18px">
+                            <div class="highlight-icon"
+                                style="width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--neon1),var(--neon4))">
+                                <i class="fas fa-stopwatch" style="color:white"></i>
+                            </div>
+                            <div class="highlight-content">
+                                <h4 style="margin-bottom:6px">Timed Access</h4>
+                                <p style="color:rgba(234,246,255,0.85)">Grant temporary access to documents with
+                                    expiration dates for secure sharing.</p>
+                            </div>
+                        </div>
+
+                        <div class="highlight-item reveal" data-reveal
+                            style="display:flex;gap:18px;align-items:flex-start;">
+                            <div class="highlight-icon"
+                                style="width:56px;height:56px;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(90deg,var(--neon3),var(--neon2))">
+                                <i class="fas fa-bell" style="color:white"></i>
+                            </div>
+                            <div class="highlight-content">
+                                <h4 style="margin-bottom:6px">Activity Alerts</h4>
+                                <p style="color:rgba(234,246,255,0.85)">Get notified when your documents are accessed or
+                                    modified by any user.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+
+        <section class="how-it-works" id="how-it-works">
+            <div class="section-header reveal" data-reveal>
+                <h2>How VaultRelay Works</h2>
+                <p>Our simple three-step process ensures your documents are always protected and accessible to the right
+                    people.</p>
+            </div>
+
+            <div class="steps">
+                <div class="step reveal" data-reveal>
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Upload Your Documents</h3>
+                        <p>Securely upload your important documents to your private VaultRelay storage. All files are
+                            encrypted before they leave your device.</p>
+                    </div>
+                </div>
+
+                <div class="step reveal" data-reveal>
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Designate a Trusted Contact</h3>
+                        <p>Choose a trusted person and set a secret code that they'll need to access your documents if
+                            needed. You control the timeframe of inactivity before transfer.</p>
+                    </div>
+                </div>
+
+                <div class="step reveal" data-reveal>
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Automatic Backup Protocol</h3>
+                        <p>If you don't log in or show activity within your specified timeframe, your documents are
+                            automatically sent to your trusted contact when they provide the secret code.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+
+        <!-- FEEDBACK SLIDER SECTION -->
+        <section class="feedback-section" id="feedback">
+            <div class="section-header reveal" data-reveal>
+                <h2>What Our Users Say</h2>
+                <p>Real feedback from our trusted community of users who rely on VaultRelay for their document security.</p>
+            </div>
+            
+            <div class="feedback-slider-container">
+                <div class="feedback-slider" id="feedbackSlider">
+                    {% for feedback in feedbacks %}
+                    <div class="feedback-card reveal" data-reveal>
+                        <div class="feedback-content">
+                            <div class="feedback-text">{{ feedback.feedback_text }}</div>
+                            <div class="feedback-author">
+                                <div class="author-avatar">
+                                    {% if feedback.image %}
+                                    <img src="{{ feedback.image.url }}" alt="{{ feedback.name }}" />
+                                    {% else %}
+                                    <img src="{% static 'media/profile_pics/default-profile.png' %}" alt="{{ feedback.name }}" />
+                                    {% endif %}
+                                </div>
+                                <div class="author-info">
+                                    <h4>{{ feedback.name }}</h4>
+                                    {% if feedback.rating %}
+                                    <div class="rating">
+                                        {% for i in "12345"|slice:":feedback.rating" %}
+                                        <span class="star">★</span>
+                                        {% endfor %}
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                
+                <!-- Navigation dots -->
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+            
+            <!-- Direct Feedback Form -->
+            <div class="direct-feedback-form reveal" data-reveal>
+                <div class="feedback-form-container">
+                    <h3><i class="fas fa-star"></i> Leave Your Review</h3>
+                    <p>Share your experience with VaultRelay</p>
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }}">
+                                <i class="fas fa-{% if message.tags == 'success' %}check-circle{% else %}exclamation-circle{% endif %}"></i>
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    
+                    <form method="POST" action="{% url 'feedback_form' %}" enctype="multipart/form-data" class="inline-feedback-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="name">Your Name</label>
+                                <input type="text" id="name" name="name" class="form-control" placeholder="Enter your name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="rating">Rating</label>
+                                <select id="rating" name="rating" class="form-control" required>
+                                    <option value="">Select Rating</option>
+                                    <option value="1">1 Star</option>
+                                    <option value="2">2 Stars</option>
+                                    <option value="3">3 Stars</option>
+                                    <option value="4">4 Stars</option>
+                                    <option value="5">5 Stars</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="feedback_text">Your Review</label>
+                            <textarea id="feedback_text" name="feedback_text" class="form-control" rows="3" placeholder="Share your experience with VaultRelay..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="image">Profile Image (Optional)</label>
+                            <input type="file" id="image" name="image" class="form-control" accept="image/*">
+                        </div>
+                        
+                        <button type="submit" class="btn-submit-review">
+                            <i class="fas fa-star"></i>
+                            Submit Review
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <section class="pricing" id="pricing">
+            <div class="section-header reveal" data-reveal>
+                <h2>Simple, Transparent Pricing</h2>
+                <p>Choose the plan that fits your needs. All plans include our trusted backup protocol.</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card reveal" data-reveal>
+                    <div class="pricing-header">
+                        <div class="pricing-name">Basic</div>
+                        <div class="pricing-price" style="font-size:1.2em;font-weight:bold;"><a href="{% url 'doc' %}"
+                                style="color:inherit;text-decoration:none;">$0</a></div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <div class="pricing-features" style="text-align:left;margin-top:16px;margin-bottom:18px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> 10GB Storage</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> 1 Trusted Contact</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Basic Encryption</div>
+                        <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Email Support</div>
+                    </div><br><br><br><br><br>
+                    <button class="btn btn-primary" style="width:100%;margin-top:10px">Get Started</button>
+                </div>
+
+                <div class="pricing-card reveal" data-reveal style="position:relative">
+                    <div class="popular-badge">Most Popular</div>
+                    <div class="pricing-header">
+                        <div class="pricing-name">Professional</div>
+                        <div class="pricing-price">$19</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <div class="pricing-features" style="text-align:left;margin-top:16px;margin-bottom:18px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> 50GB Storage</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> 3 Trusted Contacts</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Military-Grade Encryption</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Priority Support</div>
+                        <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Activity Monitoring</div>
+                    </div><br><br>
+                    <button class="btn btn-primary" style="width:100%;margin-top:10px">Get Started</button>
+                </div>
+
+                <div class="pricing-card reveal" data-reveal>
+                    <div class="pricing-header">
+                        <div class="pricing-name">Enterprise</div>
+                        <div class="pricing-price">$49</div>
+                        <div class="pricing-period">per month</div>
+                    </div>
+                    <div class="pricing-features" style="text-align:left;margin-top:16px;margin-bottom:18px">
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Unlimited Storage</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> 10 Trusted Contacts</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Military-Grade Encryption</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> 24/7 Support</div>
+                        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Advanced Monitoring</div>
+                        <div style="display:flex;align-items:center;gap:10px"><i class="fas fa-check"
+                                style="color:var(--neon3)"></i> Team Access</div><br>
+                    </div>
+                    <button class="btn btn-primary" style="width:100%;margin-top:10px">Get Started</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta reveal" data-reveal>
+            <h2>Ready to Secure Your Documents?</h2>
+            <p>Join thousands of users who trust VaultRelay to protect their most important documents with our unique
+                backup system.</p>
+            <a href="{% url 'doc' %}" class="btn btn-accent"
+                style="padding:14px 22px;margin-top:18px;text-decoration:none;display:inline-block;"><i
+                    class="fas fa-shield-alt"></i>
+                Start Your Free Trial</a>
+        </section>
+
+    </main>
+
+    <!-- FOOTER (neon) -->
+    {% include 'footer.html' %}
+
+
+    <!-- DEMO MODAL -->
+    <div id="demoModal"
+        style="display:none;position:fixed;inset:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.7);">
+        <div
+            style="max-width:980px;width:92%;border-radius:14px;overflow:hidden;border:1px solid rgba(255,255,255,0.04);box-shadow:0 40px 140px rgba(0,0,0,0.7);">
+            <div style="position:relative;padding-top:56.25%;background:#000;">
+                <iframe id="demoIframe" src="about:blank"
+                    style="position:absolute;left:0;top:0;width:100%;height:100%;border:0" allowfullscreen></iframe>
+            </div>
+            <button id="closeDemo"
+                style="position:absolute;right:22px;top:22px;background:linear-gradient(90deg,var(--neon1),var(--neon3));border:none;padding:10px 12px;border-radius:999px;color:#021018;font-weight:800;cursor:pointer">Close</button>
+        </div>
+    </div>
+
+    <!-- Success / Error toast notifications (kept from original) -->
+    <div id="successMessage"
+        style="position:fixed;bottom:30px;right:30px;background:linear-gradient(90deg,#2ed573,#20b2aa);color:#041018;padding:12px 18px;border-radius:8px;box-shadow:0 12px 40px rgba(46,213,115,0.12);transform:translateX(150%);transition:transform .45s cubic-bezier(.2,.9,.2,1);z-index:1200">
+        <i class="fas fa-check-circle"></i>
+        <span style="margin-left:8px">Document uploaded successfully!</span>
+    </div>
+
+    <div id="errorMessage"
+        style="position:fixed;bottom:30px;right:30px;background:linear-gradient(90deg,#e74c3c,#c0392b);color:#fff;padding:12px 18px;border-radius:8px;box-shadow:0 12px 40px rgba(231,76,60,0.12);transform:translateX(150%);transition:transform .45s cubic-bezier(.2,.9,.2,1);z-index:1200">
+        <i class="fas fa-exclamation-circle"></i>
+        <span style="margin-left:8px">Error uploading document. Please try again.</span>
+    </div>
+
+    <!-- Chatbot Button and Chat Window -->
+    <div id="chatbotButton" style="position:fixed;bottom:120px;right:30px;width:60px;height:60px;border-radius:50%;background:linear-gradient(90deg,#ff6ac1,#7a00ff);display:flex;align-items:center;justify-content:center;cursor:pointer;box-shadow:0 8px 32px rgba(122,0,255,0.3);z-index:1000;transition:all 0.3s ease;">
+        <i class="fas fa-comments" style="color:white;font-size:28px;"></i>
+    </div>
+
+    <div id="chatbotWindow" style="position:fixed;bottom:190px;right:30px;width:380px;height:500px;background:linear-gradient(180deg,#0f0f15,#1a1a2e);border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,0.5);z-index:1001;display:none;flex-direction:column;border:1px solid rgba(255,255,255,0.1);">
+        <!-- Chat Header -->
+        <div style="background:linear-gradient(90deg,#7a00ff,#00f0ff);padding:16px 20px;border-radius:16px 16px 0 0;display:flex;justify-content:space-between;align-items:center;">
+            <div style="display:flex;align-items:center;gap:12px;">
+                <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas fa-robot" style="color:white;font-size:20px;"></i>
+                </div>
+                <div>
+                    <div style="font-weight:800;color:#021018;font-size:16px;">VaultRelay Assistant</div>
+                    <div style="font-size:12px;color:rgba(2,16,24,0.7);">Online</div>
+                </div>
+            </div>
+            <button id="closeChatbot" style="background:rgba(255,255,255,0.2);border:none;width:32px;height:32px;border-radius:50%;cursor:pointer;color:#021018;font-size:18px;">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
+        <!-- Chat Messages -->
+        <div id="chatMessages" style="flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:16px;">
+            <!-- Initial bot message -->
+            <div style="display:flex;gap:12px;">
+                <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(90deg,#7a00ff,#00f0ff);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                    <i class="fas fa-robot" style="color:white;font-size:16px;"></i>
+                </div>
+                <div style="background:rgba(255,255,255,0.05);padding:12px 16px;border-radius:12px;max-width:75%;">
+                    <div style="color:#eaf6ff;font-size:14px;line-height:1.5;">Hey! How can I help you with?</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Input -->
+        <div style="padding:16px 20px;border-top:1px solid rgba(255,255,255,0.1);display:flex;gap:10px;align-items:center;">
+            <input type="text" id="chatInput" placeholder="Type your message..." style="flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);padding:12px 16px;border-radius:10px;color:#eaf6ff;font-size:14px;outline:none;">
+            <button id="sendMessage" style="background:linear-gradient(90deg,#7a00ff,#00f0ff);border:none;width:44px;height:44px;border-radius:10px;cursor:pointer;color:#021018;font-size:18px;display:flex;align-items:center;justify-content:center;">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <script>
+        /* =====================================================
+           PARTICLES (canvas) - neon multi-color floating dots
+           ===================================================== */
+        (function () {
+            const canvas = document.getElementById('particles-canvas');
+            const ctx = canvas.getContext('2d');
+            let W = canvas.width = innerWidth;
+            let H = canvas.height = innerHeight;
+            window.addEventListener('resize', () => { W = canvas.width = innerWidth; H = canvas.height = innerHeight; init(); });
+
+            const colors = ['#ff007f', '#7a00ff', '#00f0ff', '#00ff9e'];
+            let particles = [];
+
+            function rnd(min, max) { return Math.random() * (max - min) + min }
+
+            function createParticle() {
+                return {
+                    x: rnd(0, W),
+                    y: rnd(0, H),
+                    vx: rnd(-0.25, 0.25),
+                    vy: rnd(-0.25, 0.25),
+                    r: rnd(0.6, 2.6),
+                    c: colors[Math.floor(Math.random() * colors.length)],
+                    alpha: rnd(0.06, 0.28)
+                };
+            }
+
+            function init() {
+                particles = [];
+                const count = Math.max(Math.min(Math.floor((W * H) / 60000), 160), 60);
+                for (let i = 0; i < count; i++) particles.push(createParticle());
+            }
+
+            function draw() {
+                ctx.clearRect(0, 0, W, H);
+                // soft glow background
+                for (let p of particles) {
+                    ctx.beginPath();
+                    const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.r * 8);
+                    grad.addColorStop(0, hexToRgba(p.c, p.alpha * 1.2));
+                    grad.addColorStop(0.15, hexToRgba(p.c, p.alpha * 0.7));
+                    grad.addColorStop(1, hexToRgba('#000000', 0));
+                    ctx.fillStyle = grad;
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // move
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < -50) p.x = W + 50;
+                    if (p.x > W + 50) p.x = -50;
+                    if (p.y < -50) p.y = H + 50;
+                    if (p.y > H + 50) p.y = -50;
+                }
+                requestAnimationFrame(draw);
+            }
+
+            function hexToRgba(hex, a) {
+                const h = hex.replace('#', '');
+                const bigint = parseInt(h, 16);
+                const r = (bigint >> 16) & 255, g = (bigint >> 8) & 255, b = bigint & 255;
+                return `rgba(${r}, ${g}, ${b}, ${a})`;
+            }
+
+            init(); draw();
+        })();
+
+        /* =====================================================
+           ON-SCROLL REVEAL (intersection observer)
+           ===================================================== */
+        (function () {
+            const revealEls = document.querySelectorAll('[data-reveal]');
+            if ('IntersectionObserver' in window) {
+                const obs = new IntersectionObserver((entries) => {
+                    for (const e of entries) {
+                        if (e.isIntersecting) {
+                            e.target.classList.add('visible');
+                            e.target.classList.remove('reveal');
+                            obs.unobserve(e.target);
+                        }
+                    }
+                }, { root: null, rootMargin: '0px', threshold: 0.12 });
+                revealEls.forEach(el => obs.observe(el));
+            } else {
+                function revealFallback() {
+                    for (const el of revealEls) {
+                        const rect = el.getBoundingClientRect();
+                        if (rect.top < innerHeight - 80) {
+                            el.classList.add('visible');
+                        }
+                    }
+                }
+                addEventListener('scroll', revealFallback);
+                addEventListener('load', revealFallback);
+                revealFallback();
+            }
+        })();
+
+        /* =====================================================
+           HERO CARDS: sequential show + float applied
+           ===================================================== */
+        (function () {
+            const docStack = document.getElementById('docStack');
+            if (!docStack) return;
+            const cards = Array.from(docStack.querySelectorAll('.document-card'));
+
+            // reveal one by one when hero is visible (using observer)
+            const heroEl = document.querySelector('.hero');
+            if ('IntersectionObserver' in window && heroEl) {
+                const obs = new IntersectionObserver((entries) => {
+                    for (const e of entries) {
+                        if (e.isIntersecting) {
+                            // sequence show
+                            cards.forEach((card, i) => {
+                                setTimeout(() => {
+                                    card.classList.add('show');
+                                    // add float animation after reveal so position is stable
+                                    setTimeout(() => card.classList.add('float'), 120);
+                                }, i * 360); // stagger 360ms between each card
+                            });
+                            obs.unobserve(heroEl);
+                        }
+                    }
+                }, { threshold: 0.12 });
+                obs.observe(heroEl);
+            } else {
+                // fallback: simply show with delays on load
+                window.addEventListener('load', () => {
+                    cards.forEach((card, i) => {
+                        setTimeout(() => {
+                            card.classList.add('show');
+                            setTimeout(() => card.classList.add('float'), 120);
+                        }, i * 360);
+                    });
+                });
+            }
+
+            // subtle tilt effect for stack on mouse move (small rotation)
+            const heroImage = document.querySelector('.hero-image');
+            if (heroImage) {
+                heroImage.addEventListener('mousemove', (ev) => {
+                    const r = heroImage.getBoundingClientRect();
+                    const px = (ev.clientX - r.left) / r.width - 0.5; // -0.5 .. 0.5
+                    const py = (ev.clientY - r.top) / r.height - 0.5;
+                    // small translate for each card based on index
+                    cards.forEach((card, idx) => {
+                        const depth = (idx + 1) * 4;
+                        const tx = px * depth;
+                        const ty = py * depth * -1;
+                        card.style.transform = `translate3d(${tx}px, ${ty}px, 0) ${card.classList.contains('show') ? '' : 'translateY(0)'}`;
+                        // keep float animation if present
+                    });
+                });
+                heroImage.addEventListener('mouseleave', () => {
+                    cards.forEach(card => {
+                        card.style.transform = '';
+                    });
+                });
+            }
+        })();
+
+        /* =====================================================
+           PROFILE DROPDOWN: click toggle + hover + outside click
+           ===================================================== */
+        (function () {
+            const profileButton = document.getElementById('profileButton');
+            const profileMenu = document.getElementById('profileMenu');
+            const profileDropdown = document.getElementById('profileDropdown');
+
+            if (!profileButton || !profileMenu) return;
+
+            // helper to open/close
+            function openMenu() {
+                profileMenu.classList.add('open');
+                profileMenu.setAttribute('aria-hidden', 'false');
+                profileButton.setAttribute('aria-expanded', 'true');
+            }
+            function closeMenu() {
+                profileMenu.classList.remove('open');
+                profileMenu.setAttribute('aria-hidden', 'true');
+                profileButton.setAttribute('aria-expanded', 'false');
+            }
+            function toggleMenu() {
+                if (profileMenu.classList.contains('open')) closeMenu(); else openMenu();
+            }
+
+            // click toggles
+            profileButton.addEventListener('click', (e) => {
+                e.stopPropagation();
+                toggleMenu();
+            });
+
+            // also show on hover for desktop
+            profileDropdown.addEventListener('mouseenter', () => openMenu());
+            profileDropdown.addEventListener('mouseleave', () => closeMenu());
+
+            // close when clicking outside
+            document.addEventListener('click', (e) => {
+                if (!profileDropdown.contains(e.target)) closeMenu();
+            });
+
+            // keyboard: Esc closes
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') closeMenu();
+            });
+        })();
+
+        /* =====================================================
+           FEATURE SLIDE, DEMO MODAL, TOASTS, SCROLL & OTHER LOGIC
+           (kept from original - with minor safety checks)
+           ===================================================== */
+
+        (function () {
+            const overlay = document.getElementById('featureSlideOverlay');
+            const closeBtn = document.getElementById('featureSlideClose');
+            document.querySelectorAll('.feature-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const title = card.querySelector('h3')?.innerText || '';
+                    if (title.toLowerCase().includes('encryption') || card.querySelector('.feature-icon i.fa-lock')) {
+                        overlay.classList.add('active');
+                    } else {
+                        card.animate([{ transform: 'translateY(0)' }, { transform: 'translateY(-8px)' }, { transform: 'translateY(0)' }], { duration: 420 });
+                    }
+                });
+            });
+            closeBtn && closeBtn.addEventListener('click', () => overlay.classList.remove('active'));
+            overlay && overlay.addEventListener('click', (e) => { if (e.target === overlay) overlay.classList.remove('active') });
+        })();
+
+        (function () {
+            const watchBtn = document.getElementById('watchDemoBtn');
+            const demoModal = document.getElementById('demoModal');
+            const demoIframe = document.getElementById('demoIframe');
+            const closeDemo = document.getElementById('closeDemo');
+            const YT_URL = 'https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1&rel=0';
+
+            watchBtn && watchBtn.addEventListener('click', () => {
+                demoIframe.src = YT_URL;
+                demoModal.style.display = 'flex';
+                demoModal.style.alignItems = 'center';
+                demoModal.style.justifyContent = 'center';
+            });
+
+            closeDemo && closeDemo.addEventListener('click', () => {
+                demoIframe.src = 'about:blank';
+                demoModal.style.display = 'none';
+            });
+
+            demoModal && demoModal.addEventListener('click', (e) => {
+                if (e.target === demoModal) {
+                    demoIframe.src = 'about:blank';
+                    demoModal.style.display = 'none';
+                }
+            });
+        })();
+
+        // Get Started button functionality removed - now redirects to signup page
+
+        (function () {
+            document.querySelectorAll('a[href^="#"]').forEach(a => {
+                a.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                });
+            });
+        })();
+
+        // Esc to close overlays
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                document.getElementById('featureSlideOverlay').classList.remove('active');
+                const dm = document.getElementById('demoModal');
+                if (dm) { dm.style.display = 'none'; const ifr = document.getElementById('demoIframe'); if (ifr) ifr.src = 'about:blank'; }
+                const pm = document.getElementById('profileMenu'); if (pm) pm.classList.remove('open');
+            }
+        });
+
+        /* =====================================================
+           FEEDBACK SLIDER FUNCTIONALITY
+           ===================================================== */
+        (function() {
+            const slider = document.getElementById('feedbackSlider');
+            const dotsContainer = document.getElementById('sliderDots');
+            
+            if (!slider || !dotsContainer) return;
+            
+            const cards = slider.querySelectorAll('.feedback-card');
+            const totalCards = cards.length;
+            
+            if (totalCards === 0) return;
+            
+            let currentIndex = 0;
+            const cardsPerView = 3;
+            const cardWidth = 350 + 24; // card width + gap
+            
+            // Create dots
+            function createDots() {
+                const totalSlides = Math.ceil(totalCards / cardsPerView);
+                dotsContainer.innerHTML = '';
+                
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'slider-dot';
+                    if (i === 0) dot.classList.add('active');
+                    
+                    dot.addEventListener('click', () => {
+                        currentIndex = i;
+                        updateSlider();
+                        updateDots();
+                    });
+                    
+                    dotsContainer.appendChild(dot);
+                }
+            }
+            
+            // Update slider position
+            function updateSlider() {
+                const translateX = -currentIndex * cardsPerView * cardWidth;
+                slider.style.transform = `translateX(${translateX}px)`;
+            }
+            
+            // Update active dot
+            function updateDots() {
+                const dots = dotsContainer.querySelectorAll('.slider-dot');
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentIndex);
+                });
+            }
+            
+            // Auto-slide functionality
+            function autoSlide() {
+                const totalSlides = Math.ceil(totalCards / cardsPerView);
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateSlider();
+                updateDots();
+            }
+            
+            // Initialize
+            createDots();
+            updateSlider();
+            
+            // Start auto-slide every 5 seconds
+            setInterval(autoSlide, 5000);
+            
+            // Pause auto-slide on hover
+            slider.addEventListener('mouseenter', () => {
+                clearInterval(autoSlide);
+            });
+            
+            // Resume auto-slide on mouse leave
+            slider.addEventListener('mouseleave', () => {
+                setInterval(autoSlide, 5000);
+            });
+        })();
+
+        /* =====================================================
+           CHATBOT FUNCTIONALITY
+           ===================================================== */
+        (function() {
+            const chatbotButton = document.getElementById('chatbotButton');
+            const chatbotWindow = document.getElementById('chatbotWindow');
+            const closeChatbot = document.getElementById('closeChatbot');
+            const chatInput = document.getElementById('chatInput');
+            const sendMessage = document.getElementById('sendMessage');
+            const chatMessages = document.getElementById('chatMessages');
+
+            let isOpen = false;
+
+            // Toggle chatbot window
+            function toggleChatbot() {
+                if (isOpen) {
+                    chatbotWindow.style.display = 'none';
+                    isOpen = false;
+                } else {
+                    chatbotWindow.style.display = 'flex';
+                    isOpen = true;
+                    chatInput.focus();
+                }
+            }
+
+            // Open chatbot
+            chatbotButton.addEventListener('click', toggleChatbot);
+            
+            // Close chatbot
+            closeChatbot.addEventListener('click', () => {
+                chatbotWindow.style.display = 'none';
+                isOpen = false;
+            });
+
+            // Add message to chat
+            function addMessage(message, isUser = false) {
+                const messageDiv = document.createElement('div');
+                messageDiv.style.display = 'flex';
+                messageDiv.style.gap = '12px';
+                messageDiv.style.flexDirection = isUser ? 'row-reverse' : 'row';
+                
+                // Avatar
+                const avatar = document.createElement('div');
+                avatar.style.width = '36px';
+                avatar.style.height = '36px';
+                avatar.style.borderRadius = '50%';
+                avatar.style.background = isUser 
+                    ? 'linear-gradient(90deg,#ff6ac1,#ff007f)' 
+                    : 'linear-gradient(90deg,#7a00ff,#00f0ff)';
+                avatar.style.display = 'flex';
+                avatar.style.alignItems = 'center';
+                avatar.style.justifyContent = 'center';
+                avatar.style.flexShrink = '0';
+                
+                const icon = document.createElement('i');
+                icon.className = isUser ? 'fas fa-user' : 'fas fa-robot';
+                icon.style.color = 'white';
+                icon.style.fontSize = '16px';
+                avatar.appendChild(icon);
+                
+                // Message bubble
+                const bubble = document.createElement('div');
+                bubble.style.background = 'rgba(255,255,255,0.05)';
+                bubble.style.padding = '12px 16px';
+                bubble.style.borderRadius = '12px';
+                bubble.style.maxWidth = '75%';
+                
+                const text = document.createElement('div');
+                text.style.color = '#eaf6ff';
+                text.style.fontSize = '14px';
+                text.style.lineHeight = '1.5';
+                text.textContent = message;
+                bubble.appendChild(text);
+                
+                messageDiv.appendChild(avatar);
+                messageDiv.appendChild(bubble);
+                chatMessages.appendChild(messageDiv);
+                
+                // Scroll to bottom
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+
+            // Get bot response
+            function getBotResponse(message) {
+                const lowerMessage = message.toLowerCase().trim();
+                
+                // Get user name (if logged in)
+                let userName = "Guest";
+                {% if request.session.authenticated %}
+                    userName = "{{ request.session.user_name|default:'User' }}";
+                {% endif %}
+                
+                // Check for greeting patterns
+                const greetingPatterns = ['hiii', 'hi', 'hie', 'hello', 'hey', 'hiya'];
+                const farewellPatterns = ['bye', 'byee', 'byiee', 'goodbye', 'see you', 'farewell'];
+                
+                // Check if message matches greeting patterns
+                for (let pattern of greetingPatterns) {
+                    const regex = new RegExp('\\b' + pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
+                    if (regex.test(lowerMessage)) {
+                        return `Hello ${userName}! How can I help you today?`;
+                    }
+                }
+                
+                // Check if message matches farewell patterns
+                for (let pattern of farewellPatterns) {
+                    const regex = new RegExp('\\b' + pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b');
+                    if (regex.test(lowerMessage)) {
+                        return `Bye ${userName}! Have a great day!`;
+                    }
+                }
+                
+                // Check for specific question patterns
+                if (lowerMessage.includes('how to upload document') || (lowerMessage.includes('upload') && lowerMessage.includes('document'))) {
+                    return "There is an option in navbar of uploading document with extension like pdf,doc,png,jpg";
+                } else if (lowerMessage.includes('how to view document') || (lowerMessage.includes('view') && lowerMessage.includes('document'))) {
+                    return "There is an option of your document in navbar";
+                } else if (lowerMessage.includes('how to edit profile') || (lowerMessage.includes('edit') && lowerMessage.includes('profile'))) {
+                    return "There is your image in navbar click on it there is an option of edit profile";
+                } else if (lowerMessage.includes('logout') || lowerMessage.includes('log out')) {
+                    return "After clicking on your image there is an option of logout";
+                } else {
+                    // Default responses
+                    const defaultResponses = [
+                        `Hi ${userName}! I'm here to help you with VaultRelay. How can I assist you?`,
+                        `Hello ${userName}! What would you like to know about VaultRelay?`,
+                        `Hey ${userName}! I can help you with questions about our secure document storage service.`,
+                        `Hi ${userName}! Feel free to ask me anything about VaultRelay features.`
+                    ];
+                    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+                }
+            }
+
+            // Send message
+            function sendMessageHandler() {
+                const message = chatInput.value.trim();
+                if (message === '') return;
+                
+                // Add user message
+                addMessage(message, true);
+                
+                // Clear input
+                chatInput.value = '';
+                
+                // Simulate bot thinking
+                setTimeout(() => {
+                    const botResponse = getBotResponse(message);
+                    addMessage(botResponse, false);
+                }, 500);
+            }
+
+            sendMessage.addEventListener('click', sendMessageHandler);
+            chatInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    sendMessageHandler();
+                }
+            });
+
+            // Hover effects for chatbot button
+            chatbotButton.addEventListener('mouseenter', () => {
+                chatbotButton.style.transform = 'scale(1.1)';
+                chatbotButton.style.boxShadow = '0 12px 48px rgba(122,0,255,0.5)';
+            });
+
+            chatbotButton.addEventListener('mouseleave', () => {
+                chatbotButton.style.transform = 'scale(1)';
+                chatbotButton.style.boxShadow = '0 8px 32px rgba(122,0,255,0.3)';
+            });
+        })();
+    </script>
+
+    <!-- Chatbot Button -->
+    <button id="chatbotButton" class="chatbot-button" title="Chat with VaultRelay Assistant">
+        <i class="fas fa-robot"></i>
+    </button>
+
+    <!-- Chatbot Window -->
+    <div id="chatbotWindow" class="chatbot-window">
+        <div class="chatbot-header">
+            <div class="chatbot-title">
+                <i class="fas fa-robot"></i>
+                <span>VaultRelay Assistant</span>
+            </div>
+            <button id="closeChatbot" class="chatbot-close">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div id="chatMessages" class="chatbot-messages">
+            <div class="welcome-message">
+                <div class="bot-avatar">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div class="message-bubble">
+                    <p>Hello! I'm your VaultRelay assistant. How can I help you today?</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="chatbot-input">
+            <input type="text" id="chatInput" placeholder="Type your message..." maxlength="500">
+            <button id="sendMessage" class="send-button">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <style>
+        /* Chatbot Button */
+        .chatbot-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7a00ff, #00f0ff);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(122,0,255,0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chatbot-button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 12px 48px rgba(122,0,255,0.5);
+        }
+
+        /* Chatbot Window */
+        .chatbot-window {
+            position: fixed;
+            bottom: 110px;
+            right: 30px;
+            width: 380px;
+            height: 500px;
+            background: rgba(15, 15, 35, 0.95);
+            border-radius: 20px;
+            border: 1px solid rgba(122,0,255,0.3);
+            backdrop-filter: blur(20px);
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .chatbot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid rgba(122,0,255,0.2);
+        }
+
+        .chatbot-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #eaf6ff;
+            font-weight: 600;
+        }
+
+        .chatbot-title i {
+            color: #7a00ff;
+        }
+
+        .chatbot-close {
+            background: none;
+            border: none;
+            color: #eaf6ff;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .chatbot-close:hover {
+            background: rgba(255,255,255,0.1);
+            color: #ff6ac1;
+        }
+
+        .chatbot-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .welcome-message {
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .bot-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: linear-gradient(90deg, #7a00ff, #00f0ff);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .bot-avatar i {
+            color: white;
+            font-size: 16px;
+        }
+
+        .message-bubble {
+            background: rgba(255,255,255,0.05);
+            padding: 12px 16px;
+            border-radius: 12px;
+            max-width: 75%;
+        }
+
+        .message-bubble p {
+            color: #eaf6ff;
+            font-size: 14px;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .chatbot-input {
+            display: flex;
+            padding: 20px;
+            gap: 10px;
+            border-top: 1px solid rgba(122,0,255,0.2);
+        }
+
+        #chatInput {
+            flex: 1;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(122,0,255,0.3);
+            border-radius: 25px;
+            padding: 12px 20px;
+            color: #eaf6ff;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        #chatInput:focus {
+            border-color: #7a00ff;
+            box-shadow: 0 0 0 2px rgba(122,0,255,0.1);
+        }
+
+        #chatInput::placeholder {
+            color: rgba(234,246,255,0.5);
+        }
+
+        .send-button {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #7a00ff, #00f0ff);
+            border: none;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .send-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(122,0,255,0.4);
+        }
+
+        .send-button:disabled {
+            opacity: 0.6;
+            transform: none;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .chatbot-button {
+                width: 56px;
+                height: 56px;
+                bottom: 100px;
+            }
+            
+            .chatbot-window {
+                width: calc(100vw - 40px);
+                right: 20px;
+                bottom: 160px;
+                height: 420px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .chatbot-window {
+                width: calc(100vw - 20px);
+                right: 10px;
+            }
+        }
+    </style>
+</body>
+
+</html>

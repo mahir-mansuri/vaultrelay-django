@@ -1,0 +1,70 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Features - VaultRelay</title>
+
+    <!-- Font Awesome + Orbitron -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/features.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+</head>
+
+<body>
+    <!-- NAV -->
+    {% include 'navbar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+<section id="features">
+  <div class="section-header"><h2>Our Features</h2></div>
+  <div class="features">
+    <div class="feature fade-in">
+      <img src="https://cdn-icons-png.flaticon.com/512/3063/3063822.png" alt="Encryption Icon">
+      <h3>End-to-End Encryption</h3>
+      <p>Your data is locked with military-grade encryption from your device to our servers.</p>
+    </div>
+    <div class="feature fade-in">
+      <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Global Access Icon">
+      <h3>Global Access</h3>
+      <p>Access your documents securely from anywhere with multi-layer authentication.</p>
+    </div>
+    <div class="feature fade-in">
+      <img src="https://cdn-icons-png.flaticon.com/512/1048/1048953.png" alt="Backup Icon">
+      <h3>Secure Cloud Backup</h3>
+      <p>Automated backups ensure your documents are never lost.</p>
+    </div>
+  </div>
+</section>
+
+    </main>
+
+    <!-- FOOTER -->
+    {% include 'footer.html' %}
+
+<script>
+// fade-in scroll animation
+const faders=document.querySelectorAll('.fade-in');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+},{threshold:0.2});
+faders.forEach(fader=>observer.observe(fader));
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,82 @@
+{% load static %}
+
+<nav class="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-container container">
+        <a class="logo" href="{% url 'homeuser' %}">
+            <div class="logo-icon"><i class="fas fa-shield-alt"></i></div>
+            <span>VaultRelay</span>
+        </a>
+        <ul class="nav-links" aria-hidden="false">
+            <li><a href="{% url 'homeuser' %}" class="neon-link">Home</a></li>
+            <li><a href="{% url 'about' %}" class="neon-link">About Us</a></li>
+            <li><a href="{% url 'feature' %}" class="neon-link">Features</a></li>
+            <li><a href="{% url 'price' %}" class="neon-link">Pricing</a></li>
+            <li><a href="{% url 'contact' %}" class="neon-link">Contact</a></li>
+            <li><a href="{% url 'chatbot' %}" class="neon-link">Chatbot</a></li>
+            <li><a href="{% url 'doc' %}" class="neon-link">Add Document</a></li>
+            <li><a href="{% url 'show_document' %}" class="neon-link">Your Documents</a></li>
+        </ul>
+
+        <div class="auth-buttons">
+            {% if request.session.authenticated %}
+            <div class="profile-dropdown" id="profileDropdown">
+                <div class="profile-button" id="profileButton">
+                    <img src="{% if request.session.profile_image_url %}{{ request.session.profile_image_url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}"
+                        alt="Profile" class="profile-img">
+                    <span style="color:var(--muted)">{{ request.session.user_name|default:"User" }}
+                    </span>
+                    <span class="dropdown-caret" id="dropdownCaret"></span>
+                </div>
+                <div class="profile-menu" id="profileMenu">
+                    <a href="{% url 'edit_profile' %}" class="menu-item">
+                        <i class="fas fa-user-edit" style="margin-right: 8px;"></i>
+                        Edit Profile
+                    </a>
+                    <a href="{% url 'logout' %}" class="menu-item danger">
+                        <i class="fas fa-sign-out-alt" style="margin-right: 8px;"></i>
+                        Logout
+                    </a>
+                </div>
+            </div>
+            {% endif %}
+
+        </div>
+    </div>
+</nav>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const profileButton = document.getElementById('profileButton');
+        const profileMenu = document.getElementById('profileMenu');
+        const dropdownCaret = document.getElementById('dropdownCaret');
+        const profileDropdown = document.getElementById('profileDropdown');
+
+        function closeMenu() {
+            profileMenu.classList.remove('open');
+            dropdownCaret.classList.remove('open');
+        }
+
+        function toggleMenu() {
+            profileMenu.classList.toggle('open');
+            dropdownCaret.classList.toggle('open');
+        }
+
+        // Toggle on button click
+        profileButton.addEventListener('click', function (e) {
+            e.stopPropagation();
+            toggleMenu();
+        });
+
+        // Close on outside click
+        document.addEventListener('click', function (e) {
+            if (!profileDropdown.contains(e.target)) {
+                closeMenu();
+            }
+        });
+
+        // Prevent closing when clicking inside the menu
+        profileMenu.addEventListener('click', function (e) {
+            e.stopPropagation();
+        });
+    });
+</script>

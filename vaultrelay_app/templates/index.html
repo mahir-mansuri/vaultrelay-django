@@ -1,0 +1,150 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>VaultRelay - Secure Document Storage</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&family=Rajdhani:wght@300;400;500&family=Press+Start+2P&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+
+<body>
+    <!-- Cyber Background Elements -->
+    <div class="cyber-bg">
+        <div class="cyber-grid"></div>
+        <div class="cyber-scanline"></div>
+        <div class="cyber-particles"></div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="container vault-container">
+        <div class="hologram-container">
+            <div class="hologram-glare"></div>
+
+            <!-- Corner accents -->
+            <div class="corner-accent corner-top-left"></div>
+            <div class="corner-accent corner-top-right"></div>
+            <div class="corner-accent corner-bottom-left"></div>
+            <div class="corner-accent corner-bottom-right"></div>
+
+            <div class="vault-form">
+                <h2 class="vault-header">
+                    <span data-text="NEO-VAULT 10000">VaultRelay Locker</span>
+                </h2>
+
+                <div class="cyber-welcome-section">
+                    <h3 class="cyber-section-title">Welcome to VaultRelay</h3>
+                    <p class="cyber-text">Your secure digital vault for important documents with automatic backup to
+                        trusted contacts.</p>
+                </div>
+
+                <!-- Features Section -->
+                <div class="cyber-features-section">
+                    <h4 class="cyber-section-title">Key Features</h4>
+                    <div class="row cyber-row">
+                        <div class="col-md-6">
+                            <div class="cyber-feature-item">
+                                <i class="fas fa-lock cyber-feature-icon"></i>
+                                <h5>Military-Grade Encryption</h5>
+                                <p>AES-256 encryption for maximum security</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cyber-feature-item">
+                                <i class="fas fa-user-shield cyber-feature-icon"></i>
+                                <h5>Trusted Contact System</h5>
+                                <p>Automatic backup to trusted contacts</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row cyber-row">
+                        <div class="col-md-6">
+                            <div class="cyber-feature-item">
+                                <i class="fas fa-history cyber-feature-icon"></i>
+                                <h5>Activity Monitoring</h5>
+                                <p>Continuous monitoring and alerts</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="cyber-feature-item">
+                                <i class="fas fa-mobile-alt cyber-feature-icon"></i>
+                                <h5>Cross-Platform Access</h5>
+                                <p>Access from anywhere, any device</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- How It Works -->
+                <div class="cyber-how-it-works">
+                    <h4 class="cyber-section-title">How It Works</h4>
+                    <div class="cyber-steps">
+                        <div class="cyber-step">
+                            <div class="cyber-step-number">1</div>
+                            <div class="cyber-step-content">
+                                <h5>Upload Documents</h5>
+                                <p>Securely upload your important files</p>
+                            </div>
+                        </div>
+                        <div class="cyber-step">
+                            <div class="cyber-step-number">2</div>
+                            <div class="cyber-step-content">
+                                <h5>Set Trusted Contact</h5>
+                                <p>Choose who gets access if needed</p>
+                            </div>
+                        </div>
+                        <div class="cyber-step">
+                            <div class="cyber-step-number">3</div>
+                            <div class="cyber-step-content">
+                                <h5>Automatic Backup</h5>
+                                <p>Documents transfer automatically</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Call to Action -->
+                <div class="cyber-cta-section">
+                    <h4 class="cyber-section-title">Ready to Get Started?</h4>
+                    <p class="cyber-text">Join thousands of users who trust VaultRelay to protect their documents.</p>
+
+                    <div class="cyber-button-group">
+                        <a href="{% url 'signup' %}" class="cyber-button cyber-button-primary">
+                            <span class="cyber-btn-text">
+                                <i class="fas fa-rocket"></i> Get Started
+                            </span>
+                            <span class="cyber-btn-explosion"></span>
+                        </a>
+
+                        <a href="{% url 'login' %}" class="cyber-button cyber-button-secondary">
+                            <span class="cyber-btn-text">
+                                <i class="fas fa-sign-in-alt"></i> Already Have Account? Login
+                            </span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Terminal Effect -->
+    <div class="terminal-effect">
+        <div class="terminal-text">
+            VAULTRELAY SYSTEM ONLINE || SECURITY: QUANTUM LEVEL || ENCRYPTION: AES-256 BIT || BIOMETRIC SCAN: ACTIVE ||
+            FIREWALL: ENGAGED
+            <span class="terminal-cursor"></span>
+        </div>
+    </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="{% static 'js/index.js' %}"></script>
+</body>
+
+</html>

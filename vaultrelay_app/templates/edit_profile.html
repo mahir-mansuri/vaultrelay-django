@@ -1,0 +1,95 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - VaultRelay</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+<body>
+    <div class="container mt-4" style="max-width: 900px;">
+        <h2 class="mb-3">Edit Profile</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+
+        {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <form method="POST" enctype="multipart/form-data" class="row g-3">
+            {% csrf_token %}
+
+            <div class="col-md-4">
+                <label class="form-label">First Name</label>
+                {{ form.fname }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Middle Name</label>
+                {{ form.mname }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Last Name</label>
+                {{ form.lname }}
+            </div>
+
+            <div class="col-md-4">
+                <label class="form-label">Date of Birth</label>
+                {{ form.dob }}
+            </div>
+
+            <div class="col-md-8">
+                <label class="form-label">Email</label>
+                {{ form.user_email }}
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Trusted Email</label>
+                {{ form.trusted_email }}
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Trusted Name</label>
+                {{ form.trusted_name }}
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">New Password (optional)</label>
+                {{ form.pass1 }}
+                <div class="form-text">Exactly 6 characters if changing</div>
+            </div>
+            <div class="col-md-6">
+                <label class="form-label">Confirm Password (optional)</label>
+                {{ form.pass2 }}
+            </div>
+
+            <div class="col-12">
+                <label class="form-label">Secret Recovery Phrase</label>
+                {{ form.secret }}
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">Profile Image</label>
+                {{ form.profile_image }}
+            </div>
+            <div class="col-md-6 d-flex align-items-end">
+                {% if profile_image %}
+                    <img src="{{ profile_image.url }}" alt="Current" style="width:64px;height:64px;border-radius:50%;object-fit:cover;">
+                {% endif %}
+            </div>
+
+            <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-primary">Update</button>
+                <a href="{% url 'homeuser' %}" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="{% static 'bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+</body>
+</html>
+
+

@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Confirm Account Deletion</title>
+    <link rel="stylesheet" href="{% static 'css/confirm_delete.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h2>Confirm Account Deletion</h2>
+        <p>To delete your account, please enter your password for confirmation.</p>
+        <form method="post" action="{% if user_id %}{% url 'delete_account_with_id' user_id %}{% else %}{% url 'delete_account' %}{% endif %}">
+        {% csrf_token %}
+        <label for="password">Password:</label>
+        <input type="password" name="password" id="password" required>
+        <button type="submit">Delete Account</button>
+        </form>      
+  {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        <a href="{% url 'login' %}" class="cancel-link">Cancel</a>
+    </div>
+</body>
+</html>

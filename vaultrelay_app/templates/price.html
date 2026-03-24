@@ -1,0 +1,91 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pricing - VaultRelay</title>
+
+    <!-- Font Awesome + Orbitron -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+
+    <!-- CSS Files -->
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/price.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+</head>
+
+<body>
+    <!-- NAV -->
+    {% include 'navbar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+
+<section id="pricing">
+  <div class="section-header"><h2>Pricing Plans</h2></div>
+  <div class="pricing-cards">
+    <div class="pricing-card fade-in">
+      <h3>Basic</h3>
+      <p>Perfect for individuals</p>
+      <div class="price">$0</div>
+      <ul>
+        <li>5 GB Secure Storage</li>
+        <li>Email Support</li>
+        <li>Basic Encryption</li>
+      </ul>
+      <button class="btn btn-primary">Choose Plan</button>
+    </div>
+    <div class="pricing-card fade-in">
+      <h3>Pro</h3>
+      <p>For small teams and professionals</p>
+      <div class="price">$15/mo</div>
+      <ul>
+        <li>50 GB Secure Storage</li>
+        <li>Priority Support</li>
+        <li>Advanced Encryption</li>
+        <li>Multi-user Access</li>
+      </ul>
+      <button class="btn btn-primary">Choose Plan</button>
+    </div>
+    <div class="pricing-card fade-in">
+      <h3>Enterprise</h3>
+      <p>Best for large organizations</p>
+      <div class="price">Custom</div>
+      <ul>
+        <li>Unlimited Storage</li>
+        <li>Dedicated Support</li>
+        <li>Custom Security Policies</li>
+        <li>Integration Assistance</li>
+      </ul>
+      <button class="btn btn-primary">Contact Sales</button>
+    </div>
+  </div>
+</section>
+
+    </main>
+
+    <!-- FOOTER -->
+    {% include 'footer.html' %}
+
+<script>
+// fade-in animation for pricing cards
+const faders=document.querySelectorAll('.fade-in');
+const observer=new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target);
+    }
+  });
+},{threshold:0.2});
+faders.forEach((fader,i)=>{setTimeout(()=>observer.observe(fader),i*200);});
+
+
+</script>
+
+</body>
+</html>

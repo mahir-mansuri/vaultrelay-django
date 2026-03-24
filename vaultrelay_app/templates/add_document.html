@@ -1,0 +1,168 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Document - VaultRelay</title>
+    <link rel="stylesheet" href="{% static 'css/navbar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/add_document.css' %}">
+    <link rel="stylesheet" href="{% static 'css/footer.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- NAVBAR -->
+    {% include 'navbar.html' %}
+
+    <!-- MAIN CONTENT -->
+    <main class="container">
+        <div class="upload-container">
+            <!-- Django Messages Display -->
+            {% if messages %}
+                <div class="messages-container">
+                    {% for message in messages %}
+                        <div class="alert alert-{% if message.tags == 'success' %}success{% elif message.tags == 'error' %}error{% else %}info{% endif %}">
+                            <i class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-circle{% else %}info-circle{% endif %}"></i>
+                            <span style="margin-left: 8px;">{{ message }}</span>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+            
+            <div class="upload-header">
+                <h1>Add New Document</h1>
+                <p>Securely upload and store your important files with military-grade encryption</p>
+                
+            </div>
+
+            <form id="uploadForm" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="{{ form.document_name.id_for_label }}" class="form-label">Document Name</label>
+                    {{ form.document_name }}
+                    {% if form.document_name.errors %}
+                        <div class="error-message" style="color: #ff4757; font-size: 0.9em; margin-top: 5px;">
+                            {% for error in form.document_name.errors %}
+                                <i class="fas fa-exclamation-circle"></i> {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Upload Document</label>
+                    <div class="upload-area" id="uploadArea">
+                        {{ form.file }}
+                        <div class="upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="upload-text">Click to browse and select your file</div>
+                        <div class="upload-hint">Supports PDF, DOC, DOCX, JPG, PNG (Max 50MB) - Videos not allowed</div>
+                    </div>
+                    {% if form.file.errors %}
+                        <div class="error-message" style="color: #ff4757; font-size: 0.9em; margin-top: 5px;">
+                            {% for error in form.file.errors %}
+                                <i class="fas fa-exclamation-circle"></i> {{ error }}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="security-options">
+                    <div class="security-title">
+                        <i class="fas fa-lock"></i>
+                        <h3>Security Options</h3>
+                    </div>
+
+                    <div class="option-row">
+                        {{ form.is_encrypted }}
+                        <label for="{{ form.is_encrypted.id_for_label }}" class="option-label">Military-Grade Encryption (AES-256)</label>
+                    </div>
+                    <div class="option-description">
+                        Your document will be encrypted before upload and can only be accessed with your private key.
+                    </div>
+                </div>
+
+                <!-- Hidden field for file type detection -->
+                {{ form.file_type }}
+                
+                <!-- Hidden field for user (will be populated by Django view) -->
+                <input type="hidden" name="user" value="{{ request.user.id }}">
+
+                <button type="submit" class="btn-upload" id="uploadBtn">
+                    <i class="fas fa-shield-alt"></i> Upload & Secure Document
+                </button>
+            </form>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    {% include 'footer.html' %}
+
+    <script>
+        // Simple form handling - Let Django handle everything
+        console.log('Add Document page loaded - Django form handling enabled');
+        
+        // Basic file input click handler
+        const uploadArea = document.getElementById('uploadArea');
+        const fileInput = document.querySelector('input[type="file"]');
+        
+        // Allow clicking on upload area to select file (avoid double prompt)
+        uploadArea.addEventListener('click', (e) => {
+            if (e.target !== fileInput) {
+                fileInput.click();
+            }
+        });
+        // Prevent bubbling when clicking the actual input to avoid double-open
+        fileInput.addEventListener('click', (e) => e.stopPropagation());
+        
+        // Simple file change handler to show selected file name and set file type
+        fileInput.addEventListener('change', function () {
+            if (this.files.length > 0) {
+                const file = this.files[0];
+                console.log('File selected:', file.name);
+                
+                // Get file extension
+                const ext = file.name.split('.').pop().toLowerCase();
+                
+                // Video file extensions to block
+                const videoExtensions = ['mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv', 
+                                       'm4v', '3gp', 'mpg', 'mpeg', 'ogv', 'ts', 'mts'];
+                
+                // Check if file is a video
+                if (videoExtensions.includes(ext)) {
+                    alert('Videos are not allowed. You cannot add video files.');
+                    this.value = ''; // Clear the file input
+                    
+                    // Reset upload text
+                    const uploadText = uploadArea.querySelector('.upload-text');
+                    if (uploadText) {
+                        uploadText.textContent = 'Click to browse and select your file';
+                        uploadText.style.color = '';
+                    }
+                    return;
+                }
+                
+                // Update the file type hidden field
+                const fileTypeField = document.querySelector('input[name="file_type"]');
+                if (fileTypeField) {
+                    if (['pdf', 'doc', 'docx', 'jpg', 'jpeg', 'png'].includes(ext)) {
+                        fileTypeField.value = ext.toUpperCase();
+                    } else {
+                        fileTypeField.value = 'OTHER';
+                    }
+                }
+                
+                // Show selected file name in upload area
+                const uploadText = uploadArea.querySelector('.upload-text');
+                if (uploadText) {
+                    uploadText.textContent = `Selected: ${file.name}`;
+                    uploadText.style.color = '#00f0ff';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

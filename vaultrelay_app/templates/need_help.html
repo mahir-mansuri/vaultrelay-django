@@ -1,0 +1,180 @@
+<!-- {{
+                        request.session.user_name|default:"User"}} -->
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>VaultRelay - Password Recovery</title>
+    <link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600&family=Roboto:wght@300;400;500&display=swap');
+
+        :root {
+            --vault-dark: #0a192f;
+            --vault-blue: #00b4d8;
+            --vault-accent: #48cae4;
+            --vault-light: #caf0f8;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--vault-dark);
+            color: white;
+            background-image: url('{% static "images/digital-grid.png" %}'),
+            linear-gradient(135deg, rgba(10, 25, 47, 0.9), rgba(0, 0, 20, 0.95));
+            background-blend-mode: overlay;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .vault-container {
+            max-width: 810px;
+            margin: 2rem auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .vault-card {
+            background: rgba(10, 25, 47, 0.8);
+            border-radius: 15px;
+            padding: 2rem;
+            border: 1px solid var(--vault-blue);
+            box-shadow:
+                0 0 25px rgba(0, 180, 216, 0.3),
+                inset 0 0 15px rgba(74, 202, 228, 0.2);
+            backdrop-filter: blur(8px);
+        }
+
+        .vault-header {
+            font-family: 'Orbitron', sans-serif;
+            color: var(--vault-light);
+            text-align: center;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px rgba(74, 202, 228, 0.5);
+            position: relative;
+        }
+
+        .vault-header::after {
+            content: "";
+            display: block;
+            width: 150px;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--vault-blue), transparent);
+            margin: 10px auto 0;
+            border-radius: 3px;
+        }
+
+        .recovery-step {
+            background: rgba(0, 180, 216, 0.1);
+            border-radius: 10px;
+            padding: 1.2rem;
+            margin-bottom: 1rem;
+            border-left: 3px solid var(--vault-blue);
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            background: var(--vault-blue);
+            color: var(--vault-dark);
+            font-family: 'Orbitron', sans-serif;
+            font-weight: bold;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .btn-vault {
+            background: linear-gradient(135deg, var(--vault-blue), #0096c7);
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.3s ease;
+            margin-top: 1rem;
+            box-shadow: 0 0 15px rgba(0, 180, 216, 0.4);
+            display: block;
+            width: 100%;
+            text-align: center;
+            color: white;
+            text-decoration: none;
+        }
+
+        .btn-vault:hover {
+            background: linear-gradient(135deg, #0096c7, var(--vault-blue));
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 180, 216, 0.6);
+            color: white;
+        }
+
+        .alert-vault {
+            background: rgba(0, 180, 216, 0.15);
+            border: 1px dashed var(--vault-blue);
+            color: var(--vault-light);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container vault-container">
+        <div class="vault-card">
+            <h3 class="vault-header">VAULT ACCESS RECOVERY</h3>
+
+            <div class="alert-vault">
+                <strong>⚠ Locked out?</strong> Follow these steps to regain access to your digital vault.
+            </div>
+
+            <div class="recovery-step">
+                <div class="step-number">1</div>
+                <div>
+                    <h5>Reset via Registered Email</h5>
+                    <p>Click "Forgot Password" on the login page.
+                        You'll receive a reset link on your registered email.<br>
+                        🔹 Didn't get it? Check your spam or junk folder.</p>
+                </div>
+            </div>
+
+            <div class="recovery-step">
+                <div class="step-number">2</div>
+                <div>
+                    <h5>Verify Using OTP</h5>
+                    <p>Enter the OTP sent to your email or mobile number to verify your identity.<br>
+                        🔹 Still not receiving OTP? Check SMS inbox or wait a few minutes.</p>
+                </div>
+            </div>
+
+            <div class="recovery-step">
+                <div class="step-number">3</div>
+                <div>
+                    <h5>Set a New Password</h5>
+                    <p>Create a strong new password (e.g., MyPass@2025).<br>
+                        ✔ Use uppercase, lowercase, number & symbol.<br>
+                        ✔ Save it in a password manager or write it down safely.<br>
+                        🚫 Never share your password with anyone.</p>
+                </div>
+            </div>
+
+            <a href="/login" class="btn-vault">BACK TO LOGIN</a>
+
+            <div style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--vault-accent);">
+                <strong>Security Tip:</strong> Never share your recovery phrase or passwords with anyone.
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
