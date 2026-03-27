@@ -32,6 +32,8 @@ SESSION_SAVE_EVERY_REQUEST = True
 
 ALLOWED_HOSTS = ['*']
 
+STATIC_URL = '/static/'
+
 import os
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
@@ -55,7 +57,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
+
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 ROOT_URLCONF = 'vaultrelay.urls'
 
@@ -122,7 +127,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
-STATIC_URL = '/static/'
+
 
 
 # Media files (user uploaded content)
