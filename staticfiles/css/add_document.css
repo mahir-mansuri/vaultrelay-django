@@ -1,0 +1,386 @@
+/* CSS Variables */
+:root {
+    --neon1: #ff007f; /* pink */
+    --neon2: #7a00ff; /* purple */
+    --neon3: #00f0ff; /* cyan */
+    --neon4: #00ff9e; /* green */
+    --cyber-dark: #0a0e17;
+    --cyber-blue: #00f0ff;
+    --cyber-pink: #ff00aa;
+    --cyber-purple: #9d00ff;
+    --cyber-green: #00ff88;
+    --cyber-yellow: #ffee00;
+    --bg: #05050a;
+    --panel: #0f0f15;
+    --glass: rgba(255,255,255,0.04);
+    --muted: rgba(255,255,255,0.65);
+    --nav-height: 84px;
+}
+
+/* Base styles */
+body {
+    font-family: 'Orbitron', system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    background: radial-gradient(1200px 600px at 10% 10%, rgba(122,0,255,0.08), transparent 6%),
+                radial-gradient(1000px 500px at 90% 90%, rgba(0,240,255,0.05), transparent 6%),
+                var(--bg);
+    color: #eaf6ff;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Particle canvas and gradient */
+#particles-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: -3;
+    pointer-events: none;
+    opacity: 0.3;
+    mix-blend-mode: screen;
+}
+
+.gradient-veil {
+    position: fixed; 
+    inset: 0; 
+    z-index: -2;
+    background: linear-gradient(135deg, rgba(122,0,255,0.01), rgba(0,240,255,0.01));
+    pointer-events: none;
+}
+
+/* Ensure main content is visible */
+main {
+    position: relative;
+    z-index: 10;
+    min-height: 100vh;
+    display: block;
+}
+
+/* Ensure form elements are visible */
+form {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
+
+.form-group {
+    display: block;
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Button styles (same as home.html) */
+.btn {
+    border: 0; 
+    cursor: pointer; 
+    padding: 10px 18px; 
+    border-radius: 10px; 
+    font-weight: 700; 
+    display: inline-flex; 
+    align-items: center; 
+    gap: 8px;
+    transition: all 220ms cubic-bezier(.2,.9,.2,1);
+}
+
+.btn-outline {
+    background: transparent; 
+    color: var(--muted); 
+    border: 1px solid rgba(255,255,255,0.06);
+}
+
+.btn-primary {
+    background: linear-gradient(90deg, var(--neon2), var(--neon3));
+    color: #041017;
+    box-shadow: 0 6px 30px rgba(122,0,255,0.12), 0 4px 18px rgba(0,240,255,0.06);
+}
+
+.btn-accent {
+    background: linear-gradient(90deg, var(--neon1), var(--neon4)); 
+    color: #041017;
+}
+
+/* Neon link styling (same as home.html) */
+a.neon-link { 
+    color: var(--muted); 
+    text-decoration: none; 
+    transition: all 220ms;
+}
+
+a.neon-link:hover { 
+    color: var(--neon4); 
+    text-shadow: 0 6px 20px rgba(0,255,158,0.08);
+}
+
+/* Container */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+    position: relative;
+    z-index: 10;
+}
+
+/* Reveal animation */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Add Document Specific Styles */
+.upload-container {
+    max-width: 800px;
+    margin: 120px auto 40px;
+    padding: 30px;
+    background: rgba(4, 16, 24, 0.8);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+    position: relative;
+    z-index: 20;
+}
+
+.upload-header {
+    text-align: center;
+    margin-bottom: 30px;
+    padding-top: 20px;
+}
+
+.upload-header h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg, var(--neon1), var(--neon3));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.upload-header p {
+    color: rgba(234, 246, 255, 0.8);
+    font-size: 16px;
+}
+
+.form-group {
+    margin-bottom: 24px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--neon3);
+    font-weight: 600;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px 16px;
+    background: rgba(4, 16, 24, 0.9);
+    border: 1px solid rgba(122, 0, 255, 0.5);
+    border-radius: 8px;
+    color: #eaf6ff;
+    font-family: inherit;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--neon3);
+    box-shadow: 0 0 0 3px rgba(0, 240, 255, 0.2);
+}
+
+textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.upload-area {
+    border: 2px dashed rgba(122, 0, 255, 0.4);
+    border-radius: 12px;
+    padding: 40px 20px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-area:hover {
+    border-color: var(--neon3);
+    background: rgba(4, 16, 24, 0.4);
+}
+
+.upload-area.active {
+    border-color: var(--neon2);
+    background: rgba(0, 240, 255, 0.05);
+}
+
+.upload-icon {
+    font-size: 48px;
+    color: var(--neon2);
+    margin-bottom: 16px;
+}
+
+.upload-text {
+    color: rgba(234, 246, 255, 0.9);
+    margin-bottom: 8px;
+}
+
+.upload-hint {
+    color: rgba(234, 246, 255, 0.6);
+    font-size: 14px;
+}
+
+#fileInput {
+    display: none;
+}
+
+.file-preview {
+    display: flex;
+    align-items: center;
+    background: rgba(4, 16, 24, 0.6);
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 16px;
+}
+
+.file-icon {
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(90deg, var(--neon1), var(--neon3));
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 12px;
+    color: white;
+}
+
+.file-info {
+    flex: 1;
+}
+
+.file-name {
+    color: #eaf6ff;
+    margin-bottom: 4px;
+    word-break: break-all;
+}
+
+.file-size {
+    color: rgba(234, 246, 255, 0.7);
+    font-size: 12px;
+}
+
+.remove-file {
+    color: rgba(255, 106, 193, 0.8);
+    cursor: pointer;
+    margin-left: 12px;
+}
+
+.remove-file:hover {
+    color: var(--neon1);
+}
+
+.security-options {
+    background: rgba(4, 16, 24, 0.6);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 24px;
+}
+
+.security-title {
+    display: flex;
+    align-items: center;
+    color: var(--neon3);
+    margin-bottom: 16px;
+}
+
+.security-title i {
+    margin-right: 10px;
+}
+
+.option-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.option-label {
+    margin-left: 12px;
+    color: rgba(234, 246, 255, 0.9);
+    flex: 1;
+}
+
+.option-description {
+    color: rgba(234, 246, 255, 0.6);
+    font-size: 13px;
+    margin-left: 34px;
+    margin-top: -8px;
+    margin-bottom: 12px;
+}
+
+.btn-upload {
+    width: 100%;
+    padding: 14px;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #00f0ff, #7a00ff);
+    border: none;
+    border-radius: 8px;
+    color: #041018;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-upload:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 20px rgba(0, 240, 255, 0.6);
+}
+
+.btn-upload:disabled {
+    background: rgba(255, 255, 255, 0.1);
+    color: rgba(255, 255, 255, 0.4);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Responsive styles (same as home.html) */
+@media (max-width: 1024px) {
+    .container { 
+        padding: 0 28px;
+    }
+}
+
+/* Message alerts */
+.messages-container { margin-bottom: 16px; }
+.alert {
+    padding: 12px 16px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+}
+.alert-success {
+    background: linear-gradient(90deg, #2ed573, #20b2aa);
+    color: #041018;
+    border-color: #2ed573;
+}
+.alert-error {
+    background: linear-gradient(90deg, #ff4757, #ff3742);
+    color: #ffffff;
+    border-color: #ff4757;
+}
+.alert-info {
+    background: linear-gradient(90deg, #ffa502, #ff9f43);
+    color: #041018;
+    border-color: #ffa502;
+}
+    

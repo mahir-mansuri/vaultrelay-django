@@ -1,0 +1,197 @@
+.navbar {
+    background: rgba(15, 15, 25, 0.92);
+    backdrop-filter: blur(12px);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 500;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+    text-decoration: none;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.logo:hover {
+    transform: translateY(-2px);
+}
+
+.logo span {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: #fff;
+}
+
+.logo-icon {
+    font-size: 1.6rem;
+    color: #00f0ff;
+    text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+    transition: all 0.3s ease;
+}
+
+.logo:hover .logo-icon {
+    color: #00d4ff;
+    text-shadow: 0 0 20px rgba(0, 240, 255, 0.8);
+    transform: scale(1.05);
+}
+
+.nav-links {
+    list-style: none;
+    display: flex;
+    gap: 24px;
+}
+
+.nav-links li a,
+.nav-links li a.neon-link {
+    color: #ddd;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+    transition: color 0.3s ease;
+}
+
+.nav-links li a:hover,
+.nav-links li a.neon-link:hover {
+    color: var(--primary, #0ff);
+}
+
+.auth-buttons {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+}
+
+.profile-img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.profile-dropdown {
+    position: relative;
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 20px;
+    transition: background 0.3s ease;
+    font-weight: 600;
+    font-size: 0.95rem;
+}
+
+.profile-button:hover {
+    background: rgba(255,255,255,0.05);
+}
+
+.profile-name {
+    color: var(--muted, #ddd);
+    font-weight: 600;
+    font-size: 0.95rem;
+    margin-left: 8px;
+}
+
+.dropdown-caret {
+    display: inline-block;
+    margin-left: 8px;
+    width: 0;
+    height: 0;
+    border-left: 4px solid transparent;
+    border-right: 4px solid transparent;
+    border-top: 4px solid #ddd;
+    vertical-align: middle;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-caret.open {
+    transform: rotate(180deg);
+}
+
+.profile-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 5px);
+    background: linear-gradient(180deg, rgba(10,10,15,0.95), rgba(8,8,12,0.95));
+    min-width: 160px;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.04);
+    overflow: hidden;
+    z-index: 1000;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+}
+
+/* Invisible bridge to prevent menu closing when moving mouse */
+.profile-menu::before {
+    content: '';
+    position: absolute;
+    top: -5px;
+    right: 0;
+    width: 100%;
+    height: 5px;
+    background: transparent;
+}
+
+.profile-menu.open {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.profile-menu a {
+    display: block;
+    padding: 12px 16px;
+    color: #ddd;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.profile-menu a:last-child {
+    border-bottom: none;
+}
+
+.profile-menu a:hover {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+    padding-left: 20px;
+}
+
+.profile-menu a.danger:hover {
+    background: rgba(255, 99, 99, 0.1);
+    color: #ff9999;
+}
+
+/* Remove old styles that are not needed */
+.navbar-actions {
+    display: none;
+}
+
+.nav-mini-btn {
+    display: none;
+}
